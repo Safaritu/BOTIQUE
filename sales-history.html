@@ -2,14 +2,14 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
     <title>Boutique POS | Sales History</title>
     
     <!-- Font Awesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     
     <!-- Google Fonts -->
-    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700&family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700&family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     
     <style>
         * {
@@ -20,548 +20,353 @@
 
         body {
             font-family: 'Poppins', sans-serif;
-            background: linear-gradient(135deg, #fdf2f8 0%, #fce7f3 100%);
-            min-height: 100vh;
+            background: linear-gradient(135deg, #fef2f8 0%, #ffe4ef 100%);
             color: #1e293b;
-            display: flex;
+            overflow-x: hidden;
         }
 
-        /* ===== SIDEBAR ===== */
-        .sidebar {
-            width: 280px;
-            background: #ffffff;
-            border-right: 1px solid #fbcfe8;
-            height: 100vh;
-            position: sticky;
-            top: 0;
-            overflow-y: auto;
-            box-shadow: 2px 0 20px rgba(244, 114, 182, 0.1);
+        .app-wrapper {
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
         }
+
+        /* ===== MOBILE-FIRST SIDEBAR ===== */
+        .sidebar {
+            position: fixed;
+            top: 0;
+            left: -280px;
+            width: 280px;
+            height: 100vh;
+            background: #ffffff;
+            z-index: 1100;
+            transition: left 0.3s cubic-bezier(0.2, 0.9, 0.4, 1.1);
+            box-shadow: 5px 0 25px rgba(190, 24, 93, 0.12);
+            overflow-y: auto;
+            border-right: 1px solid #fbcfe8;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .sidebar.open { left: 0; }
+        .menu-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.4);
+            backdrop-filter: blur(3px);
+            z-index: 1050;
+            display: none;
+        }
+        .menu-overlay.active { display: block; }
 
         .sidebar-header {
-            padding: 30px 20px;
+            padding: 28px 20px;
             border-bottom: 2px solid #fce7f3;
-            background: linear-gradient(135deg, #fff1f7, #ffffff);
+            background: linear-gradient(135deg, #fff5fa, #ffffff);
         }
 
         .logo {
             display: flex;
             align-items: center;
-            gap: 15px;
+            gap: 12px;
         }
 
         .logo-icon {
-            width: 50px;
-            height: 50px;
+            width: 48px;
+            height: 48px;
             background: linear-gradient(135deg, #ec4899, #d946ef);
-            border-radius: 15px;
+            border-radius: 16px;
             display: flex;
             align-items: center;
             justify-content: center;
             color: white;
-            font-size: 24px;
-            box-shadow: 0 10px 20px rgba(236, 72, 153, 0.3);
+            font-size: 22px;
+            box-shadow: 0 12px 18px rgba(236, 72, 153, 0.25);
         }
 
         .logo-text h2 {
             font-family: 'Playfair Display', serif;
-            font-size: 20px;
+            font-size: 1.3rem;
             font-weight: 700;
             background: linear-gradient(135deg, #be185d, #a21caf);
-            -webkit-backgroundclip: text;
+            -webkit-background-clip: text;
+            background-clip: text;
             -webkit-text-fill-color: transparent;
         }
 
-        .logo-text span {
-            font-size: 10px;
-            color: #f472b6;
-            letter-spacing: 2px;
-            text-transform: uppercase;
-        }
-
         .nav-section {
-            padding: 20px 20px 10px;
-            color: #f472b6;
+            padding: 20px 20px 6px;
             font-size: 11px;
-            font-weight: 600;
-            text-transform: uppercase;
+            font-weight: 700;
+            color: #f472b6;
             letter-spacing: 1px;
         }
 
         .nav-menu {
             list-style: none;
-            margin-bottom: 20px;
         }
 
         .nav-link {
             display: flex;
             align-items: center;
-            gap: 15px;
+            gap: 14px;
             padding: 12px 20px;
-            color: #64748b;
+            margin: 4px 12px;
+            border-radius: 14px;
+            color: #475569;
             text-decoration: none;
-            transition: all 0.3s;
-            margin: 4px 10px;
-            border-radius: 12px;
+            font-weight: 500;
+            transition: all 0.2s;
         }
 
         .nav-link i {
             width: 24px;
-            font-size: 18px;
+            font-size: 1.2rem;
             color: #f472b6;
-            transition: all 0.3s;
-        }
-
-        .nav-link:hover {
-            background: #fdf2f8;
-            color: #be185d;
-        }
-
-        .nav-link:hover i {
-            color: #ec4899;
-            transform: scale(1.1);
         }
 
         .nav-link.active {
-            background: linear-gradient(135deg, #fbcfe8, #fce7f3);
+            background: linear-gradient(135deg, #fce7f3, #fdf2f8);
             color: #be185d;
-            font-weight: 500;
-            box-shadow: 0 5px 15px rgba(236, 72, 153, 0.2);
+            box-shadow: 0 4px 10px rgba(236, 72, 153, 0.1);
         }
 
         .nav-link.active i {
             color: #ec4899;
         }
 
-        /* ===== MAIN CONTENT ===== */
-        .main-content {
-            flex: 1;
-            overflow-y: auto;
-            height: 100vh;
-            padding: 20px;
-        }
-
-        .container {
-            max-width: 1600px;
-            margin: 0 auto;
-        }
-
-        /* ===== TOP BAR ===== */
-        .top-bar {
-            background: white;
+        .sidebar-stats-card {
+            background: linear-gradient(135deg, #ec4899, #d946ef);
+            margin: 20px 16px;
+            padding: 16px;
             border-radius: 20px;
-            padding: 15px 25px;
-            margin-bottom: 25px;
-            box-shadow: 0 10px 30px rgba(244, 114, 182, 0.1);
+            color: white;
+        }
+
+        /* ===== MOBILE HEADER ===== */
+        .mobile-header {
+            background: white;
+            padding: 14px 18px;
             display: flex;
             justify-content: space-between;
             align-items: center;
-            border: 1px solid #fbcfe8;
+            border-bottom: 1px solid #fce7f3;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            background: rgba(255, 255, 255, 0.96);
+            backdrop-filter: blur(5px);
         }
 
-        .page-title {
+        .menu-toggle {
+            background: #fdf2f8;
+            border: none;
+            width: 44px;
+            height: 44px;
+            border-radius: 14px;
+            font-size: 22px;
+            color: #ec4899;
+            cursor: pointer;
+        }
+
+        .mobile-logo {
+            font-family: 'Playfair Display', serif;
+            font-weight: 700;
+            font-size: 1.2rem;
+            background: linear-gradient(135deg, #be185d, #a21caf);
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        /* ===== MAIN CONTENT ===== */
+        .main-content {
+            flex: 1;
+            padding: 16px 14px 90px;
+        }
+
+        .top-bar {
+            background: white;
+            border-radius: 24px;
+            padding: 14px 18px;
+            margin-bottom: 20px;
             display: flex;
+            flex-wrap: wrap;
+            justify-content: space-between;
             align-items: center;
-            gap: 15px;
+            gap: 12px;
+            border: 1px solid #fce7f3;
         }
 
         .page-title h1 {
             font-family: 'Playfair Display', serif;
-            font-size: 24px;
+            font-size: 1.35rem;
             color: #be185d;
-        }
-
-        .page-title i {
-            color: #ec4899;
-            font-size: 24px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
         }
 
         .export-btn {
             background: linear-gradient(135deg, #10b981, #059669);
             color: white;
             border: none;
-            padding: 12px 25px;
-            border-radius: 30px;
+            padding: 10px 20px;
+            border-radius: 40px;
             font-weight: 600;
-            font-size: 14px;
-            cursor: pointer;
-            display: flex;
+            font-size: 0.75rem;
+            display: inline-flex;
             align-items: center;
-            gap: 10px;
-            transition: all 0.3s;
+            gap: 8px;
+            cursor: pointer;
         }
 
-        .export-btn:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 10px 25px rgba(16, 185, 129, 0.4);
-        }
-
-        /* ===== DATE FILTER ===== */
+        /* DATE FILTER */
         .date-filter {
             background: white;
-            border-radius: 20px;
-            padding: 20px;
-            margin-bottom: 25px;
-            border: 1px solid #fbcfe8;
+            border-radius: 24px;
+            padding: 16px;
+            margin-bottom: 20px;
+            border: 1px solid #fce7f3;
             display: flex;
             flex-wrap: wrap;
-            gap: 15px;
+            gap: 12px;
             align-items: center;
             justify-content: space-between;
         }
+        .date-range { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; }
+        .date-input { padding: 8px 12px; border: 2px solid #fce7f3; border-radius: 30px; font-size: 0.7rem; }
+        .apply-btn { background: #ec4899; color: white; border: none; padding: 8px 20px; border-radius: 30px; font-weight: 600; font-size: 0.7rem; cursor: pointer; }
+        .quick-filters { display: flex; flex-wrap: wrap; gap: 8px; }
+        .quick-filter { padding: 6px 14px; border: 1px solid #fbcfe8; background: white; border-radius: 30px; font-size: 0.65rem; cursor: pointer; }
 
-        .date-range {
-            display: flex;
-            gap: 15px;
-            flex-wrap: wrap;
-            align-items: center;
-        }
-
-        .date-input-group {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-
-        .date-input-group label {
-            font-size: 12px;
-            font-weight: 600;
-            color: #64748b;
-        }
-
-        .date-input {
-            padding: 10px 15px;
-            border: 2px solid #fce7f3;
-            border-radius: 12px;
-            font-size: 13px;
-        }
-
-        .date-input:focus {
-            outline: none;
-            border-color: #ec4899;
-        }
-
-        .apply-btn {
-            background: #ec4899;
-            color: white;
-            border: none;
-            padding: 10px 25px;
-            border-radius: 12px;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.3s;
-        }
-
-        .apply-btn:hover {
-            background: #be185d;
-        }
-
-        .quick-filters {
-            display: flex;
-            gap: 10px;
-            flex-wrap: wrap;
-        }
-
-        .quick-filter {
-            padding: 8px 20px;
-            border: 1px solid #fbcfe8;
-            background: white;
-            border-radius: 30px;
-            font-size: 12px;
-            font-weight: 500;
-            color: #64748b;
-            cursor: pointer;
-            transition: all 0.3s;
-        }
-
-        .quick-filter:hover {
-            background: #fdf2f8;
-            color: #be185d;
-            border-color: #ec4899;
-        }
-
-        /* ===== STATS CARDS ===== */
+        /* STATS GRID */
         .stats-grid {
             display: grid;
-            grid-template-columns: repeat(4, 1fr);
-            gap: 20px;
-            margin-bottom: 25px;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 14px;
+            margin-bottom: 20px;
         }
-
         .stat-card {
             background: white;
-            border-radius: 20px;
-            padding: 20px;
-            border: 1px solid #fbcfe8;
-            box-shadow: 0 5px 15px rgba(244, 114, 182, 0.05);
+            border-radius: 22px;
+            padding: 16px;
             display: flex;
             align-items: center;
-            gap: 15px;
+            gap: 12px;
+            border: 1px solid #fbcfe8;
         }
-
         .stat-icon {
-            width: 50px;
-            height: 50px;
-            background: linear-gradient(135deg, #fdf2f8, #fce7f3);
-            border-radius: 15px;
+            width: 48px;
+            height: 48px;
+            background: #fdf2f8;
+            border-radius: 16px;
             display: flex;
             align-items: center;
             justify-content: center;
             color: #ec4899;
-            font-size: 24px;
+            font-size: 1.4rem;
         }
+        .stat-info h3 { font-size: 0.7rem; color: #64748b; }
+        .stat-info p { font-size: 1.2rem; font-weight: 700; color: #be185d; }
 
-        .stat-info h3 {
-            font-size: 13px;
-            color: #64748b;
-            font-weight: 400;
-        }
-
-        .stat-info p {
-            font-size: 24px;
-            font-weight: 700;
-            color: #be185d;
-        }
-
-        /* ===== SEARCH & FILTERS ===== */
+        /* SEARCH & FILTERS */
         .search-section {
             background: white;
-            border-radius: 20px;
-            padding: 20px;
-            margin-bottom: 25px;
-            border: 1px solid #fbcfe8;
+            border-radius: 24px;
+            padding: 16px;
+            margin-bottom: 20px;
+            border: 1px solid #fce7f3;
         }
-
         .search-box {
             position: relative;
-            margin-bottom: 15px;
+            margin-bottom: 12px;
         }
-
         .search-box i {
             position: absolute;
-            left: 20px;
+            left: 16px;
             top: 50%;
             transform: translateY(-50%);
             color: #f472b6;
         }
-
         .search-box input {
             width: 100%;
-            padding: 15px 20px 15px 50px;
+            padding: 12px 12px 12px 44px;
             border: 2px solid #fce7f3;
-            border-radius: 15px;
-            font-size: 14px;
-            transition: all 0.3s;
+            border-radius: 40px;
+            font-size: 0.8rem;
         }
-
-        .search-box input:focus {
-            outline: none;
-            border-color: #ec4899;
-            box-shadow: 0 0 0 4px #fbcfe8;
-        }
-
         .filter-tabs {
             display: flex;
-            gap: 10px;
             flex-wrap: wrap;
+            gap: 8px;
         }
-
         .filter-tab {
-            padding: 8px 20px;
-            border: none;
             background: #fdf2f8;
-            border-radius: 30px;
-            font-size: 13px;
+            border: none;
+            padding: 6px 16px;
+            border-radius: 40px;
+            font-size: 0.7rem;
             font-weight: 500;
-            color: #64748b;
             cursor: pointer;
-            transition: all 0.3s;
         }
+        .filter-tab.active { background: #ec4899; color: white; }
 
-        .filter-tab:hover {
-            background: #fbcfe8;
-            color: #be185d;
-        }
-
-        .filter-tab.active {
-            background: #ec4899;
-            color: white;
-        }
-
-        /* ===== SALES TABLE ===== */
+        /* TABLE (horizontal scroll) */
         .table-container {
             background: white;
-            border-radius: 20px;
+            border-radius: 24px;
             border: 1px solid #fbcfe8;
-            overflow: hidden;
-            margin-bottom: 25px;
+            overflow-x: auto;
         }
-
-        table {
+        .sales-table {
             width: 100%;
             border-collapse: collapse;
+            min-width: 800px;
         }
-
-        th {
+        .sales-table th {
             background: #fdf2f8;
-            padding: 18px 15px;
-            text-align: left;
+            padding: 12px 10px;
+            font-size: 0.7rem;
             font-weight: 600;
             color: #be185d;
-            font-size: 13px;
-            border-bottom: 2px solid #fbcfe8;
+            text-align: left;
             cursor: pointer;
         }
-
-        th:hover {
-            background: #fbcfe8;
-        }
-
-        td {
-            padding: 15px;
+        .sales-table td {
+            padding: 10px;
             border-bottom: 1px solid #fce7f3;
+            font-size: 0.75rem;
         }
-
-        tr:hover {
-            background: #fdf2f8;
-        }
-
-        .sale-id {
-            font-weight: 600;
-            color: #ec4899;
-        }
-
-        .customer-info {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-
-        .customer-avatar {
-            width: 35px;
-            height: 35px;
-            background: linear-gradient(135deg, #fdf2f8, #fce7f3);
-            border-radius: 10px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: #ec4899;
-            font-weight: 600;
-            font-size: 14px;
-        }
-
-        .items-preview {
-            display: flex;
-            gap: 5px;
-            flex-wrap: wrap;
-        }
-
-        .item-tag {
-            background: #fdf2f8;
-            color: #be185d;
-            padding: 3px 10px;
-            border-radius: 20px;
-            font-size: 11px;
-            font-weight: 500;
-        }
-
         .payment-badge {
-            padding: 5px 12px;
+            padding: 4px 10px;
             border-radius: 30px;
-            font-size: 11px;
+            font-size: 0.65rem;
             font-weight: 600;
             display: inline-block;
         }
-
-        .payment-cash {
-            background: #10b981;
-            color: white;
-        }
-
-        .payment-mpesa {
-            background: #fbbf24;
-            color: white;
-        }
-
-        .payment-card {
-            background: #3b82f6;
-            color: white;
-        }
-
-        .amount {
-            font-weight: 700;
-            color: #be185d;
-        }
+        .payment-cash { background: #10b981; color: white; }
+        .payment-mpesa { background: #fbbf24; color: white; }
+        .payment-card { background: #3b82f6; color: white; }
 
         .action-buttons {
             display: flex;
-            gap: 8px;
+            gap: 6px;
         }
-
         .action-btn {
-            width: 35px;
-            height: 35px;
+            width: 32px;
+            height: 32px;
             border: none;
             border-radius: 10px;
             cursor: pointer;
-            transition: all 0.3s;
-            display: flex;
-            align-items: center;
-            justify-content: center;
         }
+        .view-btn { background: #fbcfe8; color: #ec4899; }
+        .receipt-btn { background: #e0e7ff; color: #4f46e5; }
 
-        .view-btn {
-            background: #fbcfe8;
-            color: #ec4899;
-        }
-
-        .view-btn:hover {
-            background: #ec4899;
-            color: white;
-        }
-
-        .receipt-btn {
-            background: #e0e7ff;
-            color: #4f46e5;
-        }
-
-        .receipt-btn:hover {
-            background: #4f46e5;
-            color: white;
-        }
-
-        /* ===== PAGINATION ===== */
-        .pagination {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            gap: 10px;
-            margin-top: 25px;
-        }
-
-        .page-btn {
-            width: 40px;
-            height: 40px;
-            border: 1px solid #fbcfe8;
-            background: white;
-            border-radius: 10px;
-            cursor: pointer;
-            transition: all 0.3s;
-        }
-
-        .page-btn:hover {
-            background: #ec4899;
-            color: white;
-            border-color: #ec4899;
-        }
-
-        .page-btn.active {
-            background: #ec4899;
-            color: white;
-            border-color: #ec4899;
-        }
-
-        /* ===== RECEIPT MODAL ===== */
+        /* MODAL */
         .modal {
             display: none;
             position: fixed;
@@ -572,910 +377,259 @@
             background: rgba(0,0,0,0.5);
             align-items: center;
             justify-content: center;
-            z-index: 1000;
+            z-index: 1200;
         }
-
-        .modal.active {
-            display: flex;
-        }
-
+        .modal.active { display: flex; }
         .modal-content {
             background: white;
-            border-radius: 30px;
-            padding: 30px;
+            border-radius: 32px;
+            padding: 24px;
             max-width: 500px;
             width: 90%;
             max-height: 90vh;
             overflow-y: auto;
         }
+        .receipt { font-family: monospace; background: white; padding: 16px; border-radius: 16px; border: 1px dashed #fbcfe8; }
+        .receipt-header { text-align: center; margin-bottom: 16px; }
+        .receipt-row { display: flex; justify-content: space-between; margin-bottom: 6px; font-size: 0.75rem; }
+        .print-btn { width: 100%; margin-top: 16px; padding: 12px; background: #ec4899; color: white; border: none; border-radius: 30px; font-weight: 600; cursor: pointer; }
 
-        .modal-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 20px;
-        }
-
-        .modal-header h2 {
-            font-family: 'Playfair Display', serif;
-            color: #be185d;
-        }
-
-        .close-modal {
-            background: none;
-            border: none;
-            font-size: 24px;
-            cursor: pointer;
-            color: #94a3b8;
-        }
-
-        /* ===== RECEIPT STYLES ===== */
-        .receipt {
-            font-family: 'Courier New', monospace;
-            background: white;
-            padding: 20px;
-            border-radius: 15px;
-            border: 1px dashed #fbcfe8;
-        }
-
-        .receipt-header {
-            text-align: center;
-            margin-bottom: 20px;
-            padding-bottom: 15px;
-            border-bottom: 2px dashed #fbcfe8;
-        }
-
-        .receipt-header h3 {
-            font-family: 'Playfair Display', serif;
-            color: #be185d;
-            font-size: 20px;
-            margin-bottom: 5px;
-        }
-
-        .receipt-info {
-            margin-bottom: 20px;
-            padding: 10px 0;
-        }
-
-        .receipt-row {
-            display: flex;
-            justify-content: space-between;
-            margin-bottom: 5px;
-            font-size: 13px;
-        }
-
-        .receipt-items {
-            margin-bottom: 20px;
-        }
-
-        .receipt-item {
-            display: flex;
-            justify-content: space-between;
-            margin-bottom: 5px;
-            font-size: 12px;
-        }
-
-        .receipt-total {
-            margin-top: 15px;
-            padding-top: 10px;
-            border-top: 2px dashed #fbcfe8;
-            font-weight: 700;
-        }
-
-        .receipt-footer {
-            text-align: center;
-            margin-top: 20px;
-            padding-top: 15px;
-            border-top: 2px dashed #fbcfe8;
-            font-size: 11px;
-            color: #64748b;
-        }
-
-        .print-btn {
-            width: 100%;
-            margin-top: 20px;
-            padding: 15px;
-            background: #ec4899;
-            color: white;
-            border: none;
-            border-radius: 15px;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.3s;
-        }
-
-        .print-btn:hover {
-            background: #be185d;
-        }
-
-        /* ===== NOTIFICATION ===== */
         .notification {
             position: fixed;
-            top: 20px;
-            right: 20px;
-            padding: 15px 25px;
+            bottom: 20px;
+            left: 16px;
+            right: 16px;
             background: white;
-            border-radius: 15px;
-            box-shadow: 0 10px 40px rgba(0,0,0,0.1);
+            border-radius: 50px;
+            padding: 12px 20px;
+            z-index: 1300;
             display: flex;
             align-items: center;
-            gap: 10px;
-            z-index: 1000;
-            animation: slideIn 0.3s ease;
-            border-left: 4px solid #ec4899;
+            gap: 12px;
+            border-left: 5px solid #ec4899;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+            animation: slideUp 0.2s ease;
+        }
+        @keyframes slideUp {
+            from { opacity: 0; transform: translateY(20px);}
+            to { opacity: 1; transform: translateY(0);}
         }
 
-        @keyframes slideIn {
-            from { transform: translateX(100%); opacity: 0; }
-            to { transform: translateX(0); opacity: 1; }
+        @media (min-width: 1024px) {
+            .mobile-header { display: none; }
+            .sidebar { position: sticky; left: 0; width: 260px; height: 100vh; display: flex; }
+            .app-wrapper { flex-direction: row; }
+            .menu-overlay { display: none !important; }
+            .stats-grid { grid-template-columns: repeat(4, 1fr); }
         }
-
-        /* ===== RESPONSIVE ===== */
-        @media (max-width: 1200px) {
-            .stats-grid {
-                grid-template-columns: repeat(2, 1fr);
-            }
-        }
-
-        @media (max-width: 768px) {
-            body {
-                flex-direction: column;
-            }
-            
-            .sidebar {
-                width: 100%;
-                height: auto;
-                position: relative;
-            }
-            
-            .stats-grid {
-                grid-template-columns: 1fr;
-            }
-            
-            .date-filter {
-                flex-direction: column;
-                align-items: stretch;
-            }
-            
-            .date-range {
-                flex-direction: column;
-            }
-            
-            .table-container {
-                overflow-x: auto;
-            }
-            
-            .action-buttons {
-                flex-direction: column;
-            }
+        @media (max-width: 640px) {
+            .date-filter { flex-direction: column; align-items: stretch; }
+            .date-range { flex-direction: column; }
         }
     </style>
 </head>
 <body>
+<div class="app-wrapper">
     <!-- SIDEBAR -->
-    <aside class="sidebar">
+    <aside class="sidebar" id="sidebar">
         <div class="sidebar-header">
-            <div class="logo">
-                <div class="logo-icon">
-                    <i class="fas fa-crown"></i>
-                </div>
-                <div class="logo-text">
-                    <h2>Boutique POS</h2>
-                    <span>by SAFTECH</span>
-                </div>
-            </div>
+            <div class="logo"><div class="logo-icon"><i class="fas fa-crown"></i></div><div class="logo-text"><h2>Boutique POS</h2><span>by SAFTECH</span></div></div>
         </div>
-
-        <!-- MAIN NAVIGATION -->
         <div class="nav-section">MAIN</div>
         <ul class="nav-menu">
             <li><a href="dashboard.html" class="nav-link"><i class="fas fa-chart-pie"></i> Dashboard</a></li>
             <li><a href="index.html" class="nav-link"><i class="fas fa-cash-register"></i> Point of Sale</a></li>
             <li><a href="inventory.html" class="nav-link"><i class="fas fa-tshirt"></i> Inventory</a></li>
             <li><a href="customers.html" class="nav-link"><i class="fas fa-users"></i> Customers</a></li>
-        </ul>
-
-        <div class="nav-section">MANAGEMENT</div>
-        <ul class="nav-menu">
             <li><a href="suppliers.html" class="nav-link"><i class="fas fa-truck"></i> Suppliers</a></li>
-            <li><a href="orders.html" class="nav-link"><i class="fas fa-clipboard-list"></i> Special Orders</a></li>
+            <li><a href="orders.html" class="nav-link"><i class="fas fa-clipboard-list"></i> Orders</a></li>
             <li><a href="returns.html" class="nav-link"><i class="fas fa-undo-alt"></i> Returns</a></li>
             <li><a href="sales-history.html" class="nav-link active"><i class="fas fa-history"></i> Sales History</a></li>
-        </ul>
-
-        <div class="nav-section">MONITORING</div>
-        <ul class="nav-menu">
             <li><a href="low-stock.html" class="nav-link"><i class="fas fa-exclamation-triangle"></i> Low Stock</a></li>
             <li><a href="reports.html" class="nav-link"><i class="fas fa-chart-bar"></i> Reports</a></li>
             <li><a href="settings.html" class="nav-link"><i class="fas fa-cog"></i> Settings</a></li>
         </ul>
-
-        <div style="padding: 20px; margin-top: 20px;">
-            <div style="background: linear-gradient(135deg, #ec4899, #d946ef); padding: 15px; border-radius: 15px;">
-                <p style="color: white; font-size: 12px; font-weight: 600; margin-bottom: 5px;">TOTAL REVENUE</p>
-                <p style="color: white; font-size: 20px; font-weight: 700;" id="sidebarTotalRevenue">Ksh 1.2M</p>
-                <p style="color: rgba(255,255,255,0.8); font-size: 11px;">This month</p>
-            </div>
+        <div class="sidebar-stats-card">
+            <p style="font-size:12px; font-weight:600;">💰 TOTAL REVENUE</p>
+            <p style="font-size:22px; font-weight:700;" id="sidebarTotalRevenue">Ksh 1.28M</p>
+            <p style="font-size:10px; opacity:0.9;">This month</p>
         </div>
     </aside>
 
-    <!-- MAIN CONTENT -->
-    <main class="main-content">
-        <div class="container">
-            <!-- TOP BAR -->
-            <div class="top-bar">
-                <div class="page-title">
-                    <i class="fas fa-history"></i>
-                    <h1>Sales History</h1>
-                </div>
-                <button class="export-btn" onclick="exportSales()">
-                    <i class="fas fa-download"></i> Export Report
-                </button>
-            </div>
+    <div class="menu-overlay" id="overlay"></div>
 
-            <!-- DATE FILTER -->
-            <div class="date-filter">
-                <div class="date-range">
-                    <div class="date-input-group">
-                        <label>From:</label>
-                        <input type="date" id="startDate" class="date-input" value="2024-01-01">
-                    </div>
-                    <div class="date-input-group">
-                        <label>To:</label>
-                        <input type="date" id="endDate" class="date-input" value="2024-12-31">
-                    </div>
-                    <button class="apply-btn" onclick="applyDateFilter()">Apply Filter</button>
-                </div>
-                <div class="quick-filters">
-                    <button class="quick-filter" onclick="setQuickFilter('today')">Today</button>
-                    <button class="quick-filter" onclick="setQuickFilter('yesterday')">Yesterday</button>
-                    <button class="quick-filter" onclick="setQuickFilter('week')">This Week</button>
-                    <button class="quick-filter" onclick="setQuickFilter('month')">This Month</button>
-                    <button class="quick-filter" onclick="setQuickFilter('year')">This Year</button>
-                </div>
-            </div>
+    <div class="main-content">
+        <div class="mobile-header">
+            <button class="menu-toggle" id="menuToggleBtn"><i class="fas fa-bars"></i></button>
+            <div class="mobile-logo">Sales History</div>
+            <i class="fas fa-history" style="color:#ec4899;"></i>
+        </div>
 
-            <!-- STATS CARDS -->
-            <div class="stats-grid">
-                <div class="stat-card">
-                    <div class="stat-icon"><i class="fas fa-shopping-bag"></i></div>
-                    <div class="stat-info">
-                        <h3>Total Transactions</h3>
-                        <p id="totalTransactions">342</p>
-                    </div>
-                </div>
-                <div class="stat-card">
-                    <div class="stat-icon"><i class="fas fa-money-bill-wave"></i></div>
-                    <div class="stat-info">
-                        <h3>Total Revenue</h3>
-                        <p id="totalRevenue">Ksh 1,284,500</p>
-                    </div>
-                </div>
-                <div class="stat-card">
-                    <div class="stat-icon"><i class="fas fa-calculator"></i></div>
-                    <div class="stat-info">
-                        <h3>Average Order</h3>
-                        <p id="avgOrder">Ksh 3,756</p>
-                    </div>
-                </div>
-                <div class="stat-card">
-                    <div class="stat-icon"><i class="fas fa-boxes"></i></div>
-                    <div class="stat-info">
-                        <h3>Items Sold</h3>
-                        <p id="itemsSold">1,847</p>
-                    </div>
-                </div>
-            </div>
+        <div class="top-bar">
+            <div class="page-title"><h1><i class="fas fa-history"></i> Sales History</h1></div>
+            <button class="export-btn" onclick="exportSales()"><i class="fas fa-download"></i> Export</button>
+        </div>
 
-            <!-- SEARCH & FILTERS -->
-            <div class="search-section">
-                <div class="search-box">
-                    <i class="fas fa-search"></i>
-                    <input type="text" id="searchInput" placeholder="Search by receipt ID, customer name, or items..." onkeyup="searchSales()">
-                </div>
-                <div class="filter-tabs">
-                    <button class="filter-tab active" onclick="filterSales('all', this)">All Sales</button>
-                    <button class="filter-tab" onclick="filterSales('cash', this)">Cash</button>
-                    <button class="filter-tab" onclick="filterSales('mpesa', this)">M-PESA</button>
-                    <button class="filter-tab" onclick="filterSales('card', this)">Card</button>
-                    <button class="filter-tab" onclick="filterSales('vip', this)">VIP Sales</button>
-                    <button class="filter-tab" onclick="filterSales('return', this)">Includes Returns</button>
-                </div>
-            </div>
+        <div class="date-filter">
+            <div class="date-range"><input type="date" id="startDate" class="date-input" value="2024-01-01"><input type="date" id="endDate" class="date-input" value="2024-12-31"><button class="apply-btn" onclick="applyDateFilter()">Apply</button></div>
+            <div class="quick-filters"><button class="quick-filter" onclick="setQuickFilter('today')">Today</button><button class="quick-filter" onclick="setQuickFilter('week')">This Week</button><button class="quick-filter" onclick="setQuickFilter('month')">This Month</button><button class="quick-filter" onclick="setQuickFilter('year')">This Year</button></div>
+        </div>
 
-            <!-- SALES TABLE -->
-            <div class="table-container">
-                <table id="salesTable">
-                    <thead>
-                        <tr>
-                            <th onclick="sortTable('id')">Receipt # <i class="fas fa-sort"></i></th>
-                            <th onclick="sortTable('date')">Date & Time <i class="fas fa-sort"></i></th>
-                            <th>Customer</th>
-                            <th>Items</th>
-                            <th onclick="sortTable('payment')">Payment <i class="fas fa-sort"></i></th>
-                            <th onclick="sortTable('amount')">Amount <i class="fas fa-sort"></i></th>
-                            <th>Actions</th>
-                        </tr>
-                    </thead>
-                    <tbody id="salesTableBody">
-                        <!-- Sales data will be loaded here -->
-                    </tbody>
-                </table>
-            </div>
+        <div class="stats-grid">
+            <div class="stat-card"><div class="stat-icon"><i class="fas fa-receipt"></i></div><div class="stat-info"><h3>Transactions</h3><p id="totalTransactions">342</p></div></div>
+            <div class="stat-card"><div class="stat-icon"><i class="fas fa-money-bill-wave"></i></div><div class="stat-info"><h3>Revenue</h3><p id="totalRevenue">Ksh 1.28M</p></div></div>
+            <div class="stat-card"><div class="stat-icon"><i class="fas fa-calculator"></i></div><div class="stat-info"><h3>Avg Order</h3><p id="avgOrder">Ksh 3,756</p></div></div>
+            <div class="stat-card"><div class="stat-icon"><i class="fas fa-boxes"></i></div><div class="stat-info"><h3>Items Sold</h3><p id="itemsSold">1,847</p></div></div>
+        </div>
 
-            <!-- PAGINATION -->
-            <div class="pagination">
-                <button class="page-btn"><i class="fas fa-chevron-left"></i></button>
-                <button class="page-btn active">1</button>
-                <button class="page-btn">2</button>
-                <button class="page-btn">3</button>
-                <button class="page-btn">4</button>
-                <button class="page-btn">5</button>
-                <button class="page-btn"><i class="fas fa-chevron-right"></i></button>
+        <div class="search-section">
+            <div class="search-box"><i class="fas fa-search"></i><input type="text" id="searchInput" placeholder="Search by receipt, customer..." onkeyup="displaySales()"></div>
+            <div class="filter-tabs" id="filterContainer">
+                <button class="filter-tab active" data-filter="all">All</button>
+                <button class="filter-tab" data-filter="cash">Cash</button>
+                <button class="filter-tab" data-filter="mpesa">M-PESA</button>
+                <button class="filter-tab" data-filter="card">Card</button>
+                <button class="filter-tab" data-filter="vip">VIP</button>
             </div>
         </div>
-    </main>
 
-    <!-- RECEIPT MODAL -->
-    <div id="receiptModal" class="modal">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h2>Sale Receipt</h2>
-                <button class="close-modal" onclick="closeReceiptModal()">&times;</button>
-            </div>
-            <div id="receiptContent" class="receipt">
-                <!-- Receipt content will be loaded here -->
-            </div>
-            <button class="print-btn" onclick="printReceipt()">
-                <i class="fas fa-print"></i> Print Receipt
-            </button>
+        <div class="table-container">
+            <table class="sales-table">
+                <thead><tr><th onclick="sortTable('id')">Receipt #</th><th onclick="sortTable('date')">Date/Time</th><th>Customer</th><th>Items</th><th onclick="sortTable('payment')">Payment</th><th onclick="sortTable('amount')">Amount</th><th>Actions</th></tr></thead>
+                <tbody id="salesTableBody"></tbody>
+            </table>
         </div>
     </div>
+</div>
 
-    <script>
-        // Sample Sales Data
-        let allSales = [
-            {
-                id: 'INV-2024-001',
-                date: '2024-01-18',
-                time: '14:30',
-                customer: { name: 'Sarah Kimani', phone: '0712345678', type: 'vip' },
-                items: [
-                    { name: 'Floral Maxi Dress', quantity: 1, price: 4500 },
-                    { name: 'Gold Necklace', quantity: 1, price: 1500 }
-                ],
-                subtotal: 6000,
-                tax: 960,
-                total: 6960,
-                paymentMethod: 'card',
-                cashier: 'Alex Safari'
-            },
-            {
-                id: 'INV-2024-002',
-                date: '2024-01-18',
-                time: '11:15',
-                customer: { name: 'Mary Wanjiku', phone: '0723456789', type: 'vip' },
-                items: [
-                    { name: 'Cashmere Sweater', quantity: 1, price: 5500 },
-                    { name: 'Leather Belt', quantity: 1, price: 1200 }
-                ],
-                subtotal: 6700,
-                tax: 1072,
-                total: 7772,
-                paymentMethod: 'mpesa',
-                cashier: 'Alex Safari'
-            },
-            {
-                id: 'INV-2024-003',
-                date: '2024-01-18',
-                time: '09:45',
-                customer: { name: 'Grace Auma', phone: '0734567890', type: 'vip' },
-                items: [
-                    { name: 'Heeled Sandals', quantity: 1, price: 4200 }
-                ],
-                subtotal: 4200,
-                tax: 672,
-                total: 4872,
-                paymentMethod: 'cash',
-                cashier: 'Alex Safari'
-            },
-            {
-                id: 'INV-2024-004',
-                date: '2024-01-17',
-                time: '16:20',
-                customer: { name: 'Lucy Njeri', phone: '0745678901', type: 'regular' },
-                items: [
-                    { name: 'Silk Blouse', quantity: 2, price: 4400 },
-                    { name: 'Pleated Skirt', quantity: 1, price: 2800 }
-                ],
-                subtotal: 7200,
-                tax: 1152,
-                total: 8352,
-                paymentMethod: 'mpesa',
-                cashier: 'Alex Safari'
-            },
-            {
-                id: 'INV-2024-005',
-                date: '2024-01-17',
-                time: '13:10',
-                customer: { name: 'Jane Muthoni', phone: '0756789012', type: 'new' },
-                items: [
-                    { name: 'Designer Scarf', quantity: 1, price: 3500 },
-                    { name: 'Gold Earrings', quantity: 1, price: 2800 }
-                ],
-                subtotal: 6300,
-                tax: 1008,
-                total: 7308,
-                paymentMethod: 'card',
-                cashier: 'Alex Safari'
-            },
-            {
-                id: 'INV-2024-006',
-                date: '2024-01-17',
-                time: '10:30',
-                customer: { name: 'Peter Mwangi', phone: '0767890123', type: 'regular' },
-                items: [
-                    { name: 'Sneakers', quantity: 1, price: 5500 }
-                ],
-                subtotal: 5500,
-                tax: 880,
-                total: 6380,
-                paymentMethod: 'cash',
-                cashier: 'Alex Safari'
-            },
-            {
-                id: 'INV-2024-007',
-                date: '2024-01-16',
-                time: '15:45',
-                customer: { name: 'Susan Akinyi', phone: '0778901234', type: 'regular' },
-                items: [
-                    { name: 'Leather Jacket', quantity: 1, price: 8900 }
-                ],
-                subtotal: 8900,
-                tax: 1424,
-                total: 10324,
-                paymentMethod: 'card',
-                cashier: 'Alex Safari'
-            },
-            {
-                id: 'INV-2024-008',
-                date: '2024-01-16',
-                time: '12:00',
-                customer: { name: 'David Odhiambo', phone: '0789012345', type: 'vip' },
-                items: [
-                    { name: 'Designer Watch', quantity: 1, price: 12500 },
-                    { name: 'Leather Belt', quantity: 1, price: 1200 }
-                ],
-                subtotal: 13700,
-                tax: 2192,
-                total: 15892,
-                paymentMethod: 'mpesa',
-                cashier: 'Alex Safari'
-            }
-        ];
+<!-- RECEIPT MODAL -->
+<div id="receiptModal" class="modal">
+    <div class="modal-content">
+        <div style="display:flex; justify-content:space-between;"><h2>Receipt</h2><button class="close-modal" onclick="closeReceiptModal()" style="background:none; border:none; font-size:1.8rem;">&times;</button></div>
+        <div id="receiptContent" class="receipt"></div>
+        <button class="print-btn" onclick="printReceipt()"><i class="fas fa-print"></i> Print</button>
+    </div>
+</div>
 
-        let filteredSales = [...allSales];
-        let currentFilter = 'all';
-        let sortColumn = 'date';
-        let sortDirection = 'desc';
-        let startDate = null;
-        let endDate = null;
+<script>
+    const allSales = [
+        { id:'INV-001', date:'2024-01-18', time:'14:30', customer:{name:'Sarah Kimani', phone:'0712345678', type:'vip'}, items:[{name:'Floral Maxi Dress', qty:1, price:4500},{name:'Gold Necklace', qty:1, price:1500}], subtotal:6000, tax:960, total:6960, paymentMethod:'card', cashier:'Alex' },
+        { id:'INV-002', date:'2024-01-18', time:'11:15', customer:{name:'Mary Wanjiku', phone:'0723456789', type:'vip'}, items:[{name:'Cashmere Sweater', qty:1, price:5500},{name:'Leather Belt', qty:1, price:1200}], subtotal:6700, tax:1072, total:7772, paymentMethod:'mpesa', cashier:'Alex' },
+        { id:'INV-003', date:'2024-01-18', time:'09:45', customer:{name:'Grace Auma', phone:'0734567890', type:'vip'}, items:[{name:'Heeled Sandals', qty:1, price:4200}], subtotal:4200, tax:672, total:4872, paymentMethod:'cash', cashier:'Alex' },
+        { id:'INV-004', date:'2024-01-17', time:'16:20', customer:{name:'Lucy Njeri', phone:'0745678901', type:'regular'}, items:[{name:'Silk Blouse', qty:2, price:4400},{name:'Pleated Skirt', qty:1, price:2800}], subtotal:7200, tax:1152, total:8352, paymentMethod:'mpesa', cashier:'Alex' },
+        { id:'INV-005', date:'2024-01-17', time:'13:10', customer:{name:'Jane Muthoni', phone:'0756789012', type:'new'}, items:[{name:'Designer Scarf', qty:1, price:3500},{name:'Gold Earrings', qty:1, price:2800}], subtotal:6300, tax:1008, total:7308, paymentMethod:'card', cashier:'Alex' },
+        { id:'INV-006', date:'2024-01-16', time:'15:45', customer:{name:'Susan Akinyi', phone:'0778901234', type:'regular'}, items:[{name:'Leather Jacket', qty:1, price:8900}], subtotal:8900, tax:1424, total:10324, paymentMethod:'card', cashier:'Alex' }
+    ];
 
-        // Initialize
-        document.addEventListener('DOMContentLoaded', function() {
-            displaySales();
-            updateStats();
+    let filteredSales = [...allSales];
+    let currentFilter = 'all';
+    let sortCol = 'date', sortDir = 'desc';
+    let startDate = null, endDate = null;
+
+    function displaySales() {
+        let data = [...allSales];
+        const search = document.getElementById('searchInput')?.value.toLowerCase() || '';
+        if(search) data = data.filter(s => s.id.toLowerCase().includes(search) || s.customer.name.toLowerCase().includes(search));
+        if(currentFilter !== 'all' && currentFilter !== 'vip') data = data.filter(s => s.paymentMethod === currentFilter);
+        else if(currentFilter === 'vip') data = data.filter(s => s.customer.type === 'vip');
+        if(startDate && endDate) data = data.filter(s => { const d = new Date(s.date); return d >= startDate && d <= endDate; });
+        
+        data.sort((a,b) => {
+            let va, vb;
+            if(sortCol === 'id') { va = a.id; vb = b.id; }
+            else if(sortCol === 'date') { va = new Date(a.date+' '+a.time); vb = new Date(b.date+' '+b.time); }
+            else if(sortCol === 'payment') { va = a.paymentMethod; vb = b.paymentMethod; }
+            else if(sortCol === 'amount') { va = a.total; vb = b.total; }
+            else return 0;
+            if(va < vb) return sortDir === 'asc' ? -1 : 1;
+            if(va > vb) return sortDir === 'asc' ? 1 : -1;
+            return 0;
         });
+        filteredSales = data;
+        renderTable();
+        updateStats();
+    }
 
-        // Display Sales
-        function displaySales() {
-            const tbody = document.getElementById('salesTableBody');
-            const searchTerm = document.getElementById('searchInput')?.value.toLowerCase() || '';
+    function renderTable() {
+        const tbody = document.getElementById('salesTableBody');
+        if(filteredSales.length===0){ tbody.innerHTML=`<tr><td colspan="7" style="text-align:center; padding:40px;">No sales found</td></tr>`; return; }
+        tbody.innerHTML = filteredSales.map(s => {
+            const paymentClass = s.paymentMethod==='cash'?'payment-cash':(s.paymentMethod==='mpesa'?'payment-mpesa':'payment-card');
+            const initials = s.customer.name.split(' ').map(n=>n[0]).join('');
+            return `<tr>
+                <td><strong>${s.id}</strong><br><small>${s.time}</small></td>
+                <td>${new Date(s.date).toLocaleDateString()}<br><small>${s.time}</small></td>
+                <td><div style="display:flex; align-items:center; gap:6px;"><div style="width:30px;height:30px;background:#fdf2f8;border-radius:10px;display:flex;align-items:center;justify-content:center;">${initials}</div><div><strong>${s.customer.name}</strong><br><small>${s.customer.type==='vip'?'⭐ VIP':''}</small></div></div></td>
+                <td>${s.items.map(i=>`${i.qty}x ${i.name.substring(0,12)}`).join(', ')}</td>
+                <td><span class="payment-badge ${paymentClass}">${s.paymentMethod.toUpperCase()}</span></td>
+                <td class="amount">Ksh ${s.total.toLocaleString()}</td>
+                <td><div class="action-buttons"><button class="action-btn view-btn" onclick="viewSaleDetails('${s.id}')"><i class="fas fa-eye"></i></button><button class="action-btn receipt-btn" onclick="viewReceipt('${s.id}')"><i class="fas fa-receipt"></i></button></div></td>
+            </tr>`;
+        }).join('');
+    }
 
-            let displayData = filteredSales;
+    function updateStats() {
+        const total = filteredSales.length;
+        const revenue = filteredSales.reduce((s,item)=>s+item.total,0);
+        const avg = total ? revenue/total : 0;
+        const items = filteredSales.reduce((s,item)=>s+item.items.reduce((a,i)=>a+i.qty,0),0);
+        document.getElementById('totalTransactions').innerText = total;
+        document.getElementById('totalRevenue').innerText = `Ksh ${(revenue/1000).toFixed(1)}K`;
+        document.getElementById('avgOrder').innerText = `Ksh ${Math.round(avg)}`;
+        document.getElementById('itemsSold').innerText = items;
+        document.getElementById('sidebarTotalRevenue').innerHTML = `Ksh ${(revenue/1000).toFixed(0)}K`;
+    }
 
-            // Apply search filter
-            if (searchTerm) {
-                displayData = displayData.filter(sale => 
-                    sale.id.toLowerCase().includes(searchTerm) ||
-                    sale.customer.name.toLowerCase().includes(searchTerm) ||
-                    sale.customer.phone.includes(searchTerm) ||
-                    sale.items.some(item => item.name.toLowerCase().includes(searchTerm))
-                );
-            }
+    function sortTable(col) { if(sortCol===col) sortDir = sortDir==='asc'?'desc':'asc'; else { sortCol=col; sortDir='asc'; } displaySales(); }
+    function applyDateFilter() {
+        const start = document.getElementById('startDate').value;
+        const end = document.getElementById('endDate').value;
+        if(start && end) { startDate = new Date(start); endDate = new Date(end); endDate.setHours(23,59,59,999); }
+        displaySales();
+        showNotif('Date filter applied','info');
+    }
+    function setQuickFilter(p) {
+        const today = new Date(); let start = new Date();
+        if(p==='today') start = new Date(today.setHours(0,0,0,0));
+        else if(p==='week') start.setDate(today.getDate()-7);
+        else if(p==='month') start.setMonth(today.getMonth()-1);
+        else if(p==='year') start.setFullYear(today.getFullYear()-1);
+        document.getElementById('startDate').value = start.toISOString().split('T')[0];
+        document.getElementById('endDate').value = today.toISOString().split('T')[0];
+        applyDateFilter();
+    }
 
-            // Apply payment method filter
-            if (currentFilter !== 'all' && !['vip', 'return'].includes(currentFilter)) {
-                displayData = displayData.filter(sale => sale.paymentMethod === currentFilter);
-            } else if (currentFilter === 'vip') {
-                displayData = displayData.filter(sale => sale.customer.type === 'vip');
-            }
+    function viewSaleDetails(id) { const s=allSales.find(s=>s.id===id); alert(`Receipt: ${s.id}\nCustomer: ${s.customer.name}\nTotal: Ksh ${s.total}\nItems: ${s.items.map(i=>`${i.qty}x ${i.name}`).join(', ')}`); }
+    function viewReceipt(id) {
+        const s = allSales.find(s=>s.id===id);
+        const receiptHtml = `<div class="receipt-header"><h3>SAFTECH BOUTIQUE</h3><div>Your Style Destination</div></div>
+            <div class="receipt-info"><div class="receipt-row"><span>Receipt:</span><span>${s.id}</span></div><div class="receipt-row"><span>Date:</span><span>${s.date} ${s.time}</span></div><div class="receipt-row"><span>Customer:</span><span>${s.customer.name}</span></div></div>
+            <div><div style="display:flex; justify-content:space-between; font-weight:600;"><span>Item</span><span>Qty</span><span>Price</span></div>${s.items.map(i=>`<div class="receipt-row"><span>${i.name}</span><span>${i.qty}</span><span>Ksh ${i.price}</span></div>`).join('')}</div>
+            <div class="receipt-total" style="border-top:1px dashed #ccc; margin-top:10px; padding-top:10px;"><div class="receipt-row"><span>Subtotal:</span><span>Ksh ${s.subtotal}</span></div><div class="receipt-row"><span>VAT 16%:</span><span>Ksh ${s.tax}</span></div><div class="receipt-row"><strong>TOTAL:</strong><strong>Ksh ${s.total}</strong></div><div class="receipt-row"><span>Payment:</span><span>${s.paymentMethod.toUpperCase()}</span></div></div>
+            <div class="receipt-footer" style="text-align:center; margin-top:15px; font-size:10px;">Thank you! Returns accepted 30 days</div>`;
+        document.getElementById('receiptContent').innerHTML = receiptHtml;
+        document.getElementById('receiptModal').classList.add('active');
+    }
+    function closeReceiptModal() { document.getElementById('receiptModal').classList.remove('active'); }
+    function printReceipt() {
+        const content = document.getElementById('receiptContent').innerHTML;
+        const w = window.open('','_blank');
+        w.document.write(`<html><head><title>Receipt</title><style>body{font-family:monospace;padding:20px;}</style></head><body>${content}</body></html>`);
+        w.document.close(); w.print();
+    }
+    function exportSales() {
+        let csv = "Receipt,Date,Customer,Phone,Items,Payment,Total\n";
+        filteredSales.forEach(s=>{ const itemsStr = s.items.map(i=>`${i.qty}x ${i.name}`).join('; '); csv += `"${s.id}","${s.date}","${s.customer.name}","${s.customer.phone}","${itemsStr}","${s.paymentMethod}",${s.total}\n`; });
+        const blob = new Blob([csv],{type:'text/csv'}); const a=document.createElement('a'); a.href=URL.createObjectURL(blob); a.download=`sales_${new Date().toISOString().split('T')[0]}.csv`; a.click();
+        showNotif('Export complete','success');
+    }
+    function showNotif(msg,type){ const n=document.createElement('div'); n.className='notification'; n.innerHTML=`<i class="fas ${type==='success'?'fa-check-circle':'fa-info-circle'}" style="color:#ec4899"></i><span>${msg}</span>`; document.body.appendChild(n); setTimeout(()=>n.remove(),2500); }
 
-            // Apply date filter
-            if (startDate && endDate) {
-                displayData = displayData.filter(sale => {
-                    const saleDate = new Date(sale.date);
-                    return saleDate >= startDate && saleDate <= endDate;
-                });
-            }
-
-            // Apply sorting
-            displayData.sort((a, b) => {
-                let valA, valB;
-                
-                switch(sortColumn) {
-                    case 'id':
-                        valA = a.id;
-                        valB = b.id;
-                        break;
-                    case 'date':
-                        valA = new Date(a.date + ' ' + a.time);
-                        valB = new Date(b.date + ' ' + b.time);
-                        break;
-                    case 'payment':
-                        valA = a.paymentMethod;
-                        valB = b.paymentMethod;
-                        break;
-                    case 'amount':
-                        valA = a.total;
-                        valB = b.total;
-                        break;
-                    default:
-                        return 0;
-                }
-
-                if (valA < valB) return sortDirection === 'asc' ? -1 : 1;
-                if (valA > valB) return sortDirection === 'asc' ? 1 : -1;
-                return 0;
-            });
-
-            if (displayData.length === 0) {
-                tbody.innerHTML = `
-                    <tr>
-                        <td colspan="7" style="text-align: center; padding: 40px; color: #94a3b8;">
-                            <i class="fas fa-receipt" style="font-size: 40px; margin-bottom: 15px; opacity: 0.3;"></i>
-                            <p>No sales found</p>
-                        </td>
-                    </tr>
-                `;
-                return;
-            }
-
-            tbody.innerHTML = displayData.map(sale => {
-                const paymentClass = sale.paymentMethod === 'cash' ? 'payment-cash' :
-                                    sale.paymentMethod === 'mpesa' ? 'payment-mpesa' : 'payment-card';
-                
-                const customerInitials = sale.customer.name.split(' ').map(n => n[0]).join('');
-
-                return `
-                    <tr>
-                        <td>
-                            <span class="sale-id">${sale.id}</span>
-                            <div style="font-size: 11px; color: #94a3b8;">${sale.time}</div>
-                        </td>
-                        <td>
-                            <div style="font-weight: 500;">${new Date(sale.date).toLocaleDateString('en-KE', { day: '2-digit', month: 'short', year: 'numeric' })}</div>
-                            <div style="font-size: 11px; color: #94a3b8;">${sale.time}</div>
-                        </td>
-                        <td>
-                            <div class="customer-info">
-                                <div class="customer-avatar">${customerInitials}</div>
-                                <div>
-                                    <div style="font-weight: 500;">${sale.customer.name}</div>
-                                    <div style="font-size: 10px; color: #94a3b8;">
-                                        ${sale.customer.phone}
-                                        ${sale.customer.type === 'vip' ? ' ⭐ VIP' : ''}
-                                    </div>
-                                </div>
-                            </div>
-                        </td>
-                        <td>
-                            <div class="items-preview">
-                                ${sale.items.map(item => 
-                                    `<span class="item-tag">${item.quantity}x ${item.name.substring(0, 15)}${item.name.length > 15 ? '...' : ''}</span>`
-                                ).join('')}
-                            </div>
-                        </td>
-                        <td>
-                            <span class="payment-badge ${paymentClass}">
-                                ${sale.paymentMethod.toUpperCase()}
-                            </span>
-                        </td>
-                        <td class="amount">Ksh ${sale.total.toLocaleString()}</td>
-                        <td>
-                            <div class="action-buttons">
-                                <button class="action-btn view-btn" onclick="viewSaleDetails('${sale.id}')">
-                                    <i class="fas fa-eye"></i>
-                                </button>
-                                <button class="action-btn receipt-btn" onclick="viewReceipt('${sale.id}')">
-                                    <i class="fas fa-receipt"></i>
-                                </button>
-                            </div>
-                        </td>
-                    </tr>
-                `;
-            }).join('');
-
-            updateStats();
-        }
-
-        // Update Statistics
-        function updateStats() {
-            const total = filteredSales.length;
-            const revenue = filteredSales.reduce((sum, sale) => sum + sale.total, 0);
-            const avg = total > 0 ? revenue / total : 0;
-            const items = filteredSales.reduce((sum, sale) => 
-                sum + sale.items.reduce((itemSum, item) => itemSum + item.quantity, 0), 0);
-
-            document.getElementById('totalTransactions').textContent = total;
-            document.getElementById('totalRevenue').textContent = `Ksh ${revenue.toLocaleString()}`;
-            document.getElementById('avgOrder').textContent = `Ksh ${avg.toFixed(0)}`;
-            document.getElementById('itemsSold').textContent = items;
-            document.getElementById('sidebarTotalRevenue').textContent = `Ksh ${(revenue/1000).toFixed(0)}K`;
-        }
-
-        // Date Filter Functions
-        function applyDateFilter() {
-            const start = document.getElementById('startDate').value;
-            const end = document.getElementById('endDate').value;
-            
-            if (start && end) {
-                startDate = new Date(start);
-                endDate = new Date(end);
-                endDate.setHours(23, 59, 59, 999);
-                
-                filteredSales = allSales.filter(sale => {
-                    const saleDate = new Date(sale.date);
-                    return saleDate >= startDate && saleDate <= endDate;
-                });
-                
-                displaySales();
-                showNotification(`Showing sales from ${start} to ${end}`, 'info');
-            }
-        }
-
-        function setQuickFilter(period) {
-            const today = new Date();
-            let start = new Date();
-            
-            switch(period) {
-                case 'today':
-                    start = new Date(today.setHours(0,0,0,0));
-                    break;
-                case 'yesterday':
-                    start = new Date(today.setDate(today.getDate() - 1));
-                    start.setHours(0,0,0,0);
-                    today.setHours(23,59,59,999);
-                    break;
-                case 'week':
-                    start.setDate(today.getDate() - 7);
-                    break;
-                case 'month':
-                    start.setMonth(today.getMonth() - 1);
-                    break;
-                case 'year':
-                    start.setFullYear(today.getFullYear() - 1);
-                    break;
-            }
-
-            document.getElementById('startDate').value = start.toISOString().split('T')[0];
-            document.getElementById('endDate').value = today.toISOString().split('T')[0];
-            applyDateFilter();
-        }
-
-        // Filter Functions
-        function filterSales(filter, element) {
-            document.querySelectorAll('.filter-tab').forEach(btn => {
-                btn.classList.remove('active');
-            });
-            element.classList.add('active');
-            
-            currentFilter = filter;
-            
-            if (filter === 'all') {
-                filteredSales = [...allSales];
-            } else if (filter === 'vip') {
-                filteredSales = allSales.filter(sale => sale.customer.type === 'vip');
-            } else {
-                filteredSales = allSales.filter(sale => sale.paymentMethod === filter);
-            }
-            
-            displaySales();
-        }
-
-        function searchSales() {
-            displaySales();
-        }
-
-        // Sort Table
-        function sortTable(column) {
-            if (sortColumn === column) {
-                sortDirection = sortDirection === 'asc' ? 'desc' : 'asc';
-            } else {
-                sortColumn = column;
-                sortDirection = 'asc';
-            }
-            
-            displaySales();
-        }
-
-        // View Sale Details
-        function viewSaleDetails(saleId) {
-            const sale = allSales.find(s => s.id === saleId);
-            if (!sale) return;
-
-            const details = `
-                Receipt: ${sale.id}
-                Date: ${sale.date} ${sale.time}
-                Customer: ${sale.customer.name}
-                Phone: ${sale.customer.phone}
-                Payment: ${sale.paymentMethod}
-                
-                Items:
-                ${sale.items.map(item => 
-                    `${item.name} - ${item.quantity} x Ksh ${item.price} = Ksh ${item.price * item.quantity}`
-                ).join('\n')}
-                
-                Subtotal: Ksh ${sale.subtotal}
-                Tax (16%): Ksh ${sale.tax}
-                Total: Ksh ${sale.total}
-                
-                Cashier: ${sale.cashier}
-            `;
-
-            alert(details);
-        }
-
-        // View Receipt
-        function viewReceipt(saleId) {
-            const sale = allSales.find(s => s.id === saleId);
-            if (!sale) return;
-
-            const receipt = `
-                <div class="receipt-header">
-                    <h3>SAFTECH BOUTIQUE</h3>
-                    <div style="font-size: 11px;">Your Style Destination</div>
-                    <div style="font-size: 10px;">Tel: 0794 963537</div>
-                </div>
-                
-                <div class="receipt-info">
-                    <div class="receipt-row">
-                        <span>Receipt No:</span>
-                        <span>${sale.id}</span>
-                    </div>
-                    <div class="receipt-row">
-                        <span>Date:</span>
-                        <span>${sale.date} ${sale.time}</span>
-                    </div>
-                    <div class="receipt-row">
-                        <span>Customer:</span>
-                        <span>${sale.customer.name}</span>
-                    </div>
-                    <div class="receipt-row">
-                        <span>Cashier:</span>
-                        <span>${sale.cashier}</span>
-                    </div>
-                </div>
-                
-                <div class="receipt-items">
-                    <div style="display: flex; justify-content: space-between; font-weight: 600; margin-bottom: 5px;">
-                        <span>Item</span>
-                        <span>Qty</span>
-                        <span>Price</span>
-                        <span>Total</span>
-                    </div>
-                    ${sale.items.map(item => `
-                        <div class="receipt-item">
-                            <span style="flex:2;">${item.name}</span>
-                            <span style="flex:1; text-align: center;">${item.quantity}</span>
-                            <span style="flex:1; text-align: right;">${item.price}</span>
-                            <span style="flex:1; text-align: right;">${item.price * item.quantity}</span>
-                        </div>
-                    `).join('')}
-                </div>
-                
-                <div class="receipt-total">
-                    <div class="receipt-row">
-                        <span>Subtotal:</span>
-                        <span>Ksh ${sale.subtotal}</span>
-                    </div>
-                    <div class="receipt-row">
-                        <span>VAT (16%):</span>
-                        <span>Ksh ${sale.tax}</span>
-                    </div>
-                    <div class="receipt-row" style="font-size: 16px;">
-                        <span>TOTAL:</span>
-                        <span>Ksh ${sale.total}</span>
-                    </div>
-                    <div class="receipt-row">
-                        <span>Payment:</span>
-                        <span>${sale.paymentMethod.toUpperCase()}</span>
-                    </div>
-                </div>
-                
-                <div class="receipt-footer">
-                    <div>Thank you for shopping with us!</div>
-                    <div>Returns accepted within 30 days</div>
-                    <div style="margin-top: 10px;">Powered by SAFTECH RESOLUTIONS</div>
-                </div>
-            `;
-
-            document.getElementById('receiptContent').innerHTML = receipt;
-            document.getElementById('receiptModal').classList.add('active');
-        }
-
-        function closeReceiptModal() {
-            document.getElementById('receiptModal').classList.remove('active');
-        }
-
-        function printReceipt() {
-            const receiptContent = document.getElementById('receiptContent').innerHTML;
-            const printWindow = window.open('', '_blank');
-            
-            printWindow.document.write(`
-                <html>
-                    <head>
-                        <title>Sale Receipt</title>
-                        <style>
-                            body { font-family: 'Courier New', monospace; padding: 20px; }
-                            .receipt-header { text-align: center; margin-bottom: 20px; }
-                            .receipt-info { margin-bottom: 20px; }
-                            .receipt-row { display: flex; justify-content: space-between; margin-bottom: 5px; }
-                            .receipt-items { margin-bottom: 20px; }
-                            .receipt-item { display: flex; justify-content: space-between; margin-bottom: 3px; }
-                            .receipt-total { margin-top: 15px; padding-top: 10px; border-top: 2px dashed #000; }
-                            .receipt-footer { text-align: center; margin-top: 20px; font-size: 11px; }
-                        </style>
-                    </head>
-                    <body>
-                        ${receiptContent}
-                    </body>
-                </html>
-            `);
-            
-            printWindow.document.close();
-            printWindow.print();
-        }
-
-        // Export Sales
-        function exportSales() {
-            let csv = "Receipt ID,Date,Time,Customer Name,Phone,Items,Payment Method,Total\n";
-            
-            filteredSales.forEach(sale => {
-                const itemsStr = sale.items.map(item => `${item.quantity}x ${item.name}`).join('; ');
-                csv += `"${sale.id}","${sale.date}","${sale.time}","${sale.customer.name}","${sale.customer.phone}","${itemsStr}","${sale.paymentMethod}",${sale.total}\n`;
-            });
-
-            const blob = new Blob([csv], { type: 'text/csv' });
-            const url = window.URL.createObjectURL(blob);
-            const a = document.createElement('a');
-            a.href = url;
-            a.download = `sales_export_${new Date().toISOString().split('T')[0]}.csv`;
-            a.click();
-            
-            showNotification('Sales data exported successfully!', 'success');
-        }
-
-        // Show Notification
-        function showNotification(message, type = 'info') {
-            const notification = document.createElement('div');
-            notification.className = 'notification';
-            notification.innerHTML = `
-                <i class="fas ${type === 'success' ? 'fa-check-circle' : type === 'error' ? 'fa-exclamation-circle' : 'fa-info-circle'}" style="color: #ec4899;"></i>
-                <span>${message}</span>
-            `;
-            
-            document.body.appendChild(notification);
-            setTimeout(() => notification.remove(), 3000);
-        }
-
-        // Close modal when clicking outside
-        window.onclick = function(event) {
-            const receiptModal = document.getElementById('receiptModal');
-            if (event.target === receiptModal) {
-                closeReceiptModal();
-            }
-        }
-    </script>
+    document.querySelectorAll('.filter-tab').forEach(btn=>{ btn.addEventListener('click',()=>{ document.querySelectorAll('.filter-tab').forEach(b=>b.classList.remove('active')); btn.classList.add('active'); currentFilter = btn.getAttribute('data-filter'); displaySales(); }); });
+    document.getElementById('menuToggleBtn')?.addEventListener('click',()=>{ document.getElementById('sidebar').classList.add('open'); document.getElementById('overlay').classList.add('active'); });
+    document.getElementById('overlay')?.addEventListener('click',()=>{ document.getElementById('sidebar').classList.remove('open'); document.getElementById('overlay').classList.remove('active'); });
+    window.onclick = (e)=>{ if(e.target===document.getElementById('receiptModal')) closeReceiptModal(); };
+    displaySales();
+</script>
 </body>
 </html>
