@@ -2,14 +2,14 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
     <title>Boutique POS | Settings</title>
     
     <!-- Font Awesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     
     <!-- Google Fonts -->
-    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700&family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700&family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     
     <style>
         * {
@@ -20,1266 +20,565 @@
 
         body {
             font-family: 'Poppins', sans-serif;
-            background: linear-gradient(135deg, #fdf2f8 0%, #fce7f3 100%);
-            min-height: 100vh;
+            background: linear-gradient(135deg, #fef2f8 0%, #ffe4ef 100%);
             color: #1e293b;
-            display: flex;
+            overflow-x: hidden;
         }
 
-        /* ===== SIDEBAR ===== */
-        .sidebar {
-            width: 280px;
-            background: #ffffff;
-            border-right: 1px solid #fbcfe8;
-            height: 100vh;
-            position: sticky;
-            top: 0;
-            overflow-y: auto;
-            box-shadow: 2px 0 20px rgba(244, 114, 182, 0.1);
+        .app-wrapper {
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
         }
+
+        /* ===== MOBILE-FIRST SIDEBAR ===== */
+        .sidebar {
+            position: fixed;
+            top: 0;
+            left: -280px;
+            width: 280px;
+            height: 100vh;
+            background: #ffffff;
+            z-index: 1100;
+            transition: left 0.3s cubic-bezier(0.2, 0.9, 0.4, 1.1);
+            box-shadow: 5px 0 25px rgba(190, 24, 93, 0.12);
+            overflow-y: auto;
+            border-right: 1px solid #fbcfe8;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .sidebar.open { left: 0; }
+        .menu-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.4);
+            backdrop-filter: blur(3px);
+            z-index: 1050;
+            display: none;
+        }
+        .menu-overlay.active { display: block; }
 
         .sidebar-header {
-            padding: 30px 20px;
+            padding: 28px 20px;
             border-bottom: 2px solid #fce7f3;
-            background: linear-gradient(135deg, #fff1f7, #ffffff);
+            background: linear-gradient(135deg, #fff5fa, #ffffff);
         }
 
         .logo {
             display: flex;
             align-items: center;
-            gap: 15px;
+            gap: 12px;
         }
 
         .logo-icon {
-            width: 50px;
-            height: 50px;
+            width: 48px;
+            height: 48px;
             background: linear-gradient(135deg, #ec4899, #d946ef);
-            border-radius: 15px;
+            border-radius: 16px;
             display: flex;
             align-items: center;
             justify-content: center;
             color: white;
-            font-size: 24px;
-            box-shadow: 0 10px 20px rgba(236, 72, 153, 0.3);
+            font-size: 22px;
+            box-shadow: 0 12px 18px rgba(236, 72, 153, 0.25);
         }
 
         .logo-text h2 {
             font-family: 'Playfair Display', serif;
-            font-size: 20px;
+            font-size: 1.3rem;
             font-weight: 700;
             background: linear-gradient(135deg, #be185d, #a21caf);
-            -webkit-backgroundclip: text;
+            -webkit-background-clip: text;
+            background-clip: text;
             -webkit-text-fill-color: transparent;
         }
 
-        .logo-text span {
-            font-size: 10px;
-            color: #f472b6;
-            letter-spacing: 2px;
-            text-transform: uppercase;
-        }
-
         .nav-section {
-            padding: 20px 20px 10px;
-            color: #f472b6;
+            padding: 20px 20px 6px;
             font-size: 11px;
-            font-weight: 600;
-            text-transform: uppercase;
+            font-weight: 700;
+            color: #f472b6;
             letter-spacing: 1px;
         }
 
         .nav-menu {
             list-style: none;
-            margin-bottom: 20px;
         }
 
         .nav-link {
             display: flex;
             align-items: center;
-            gap: 15px;
+            gap: 14px;
             padding: 12px 20px;
-            color: #64748b;
+            margin: 4px 12px;
+            border-radius: 14px;
+            color: #475569;
             text-decoration: none;
-            transition: all 0.3s;
-            margin: 4px 10px;
-            border-radius: 12px;
+            font-weight: 500;
+            transition: all 0.2s;
         }
 
         .nav-link i {
             width: 24px;
-            font-size: 18px;
+            font-size: 1.2rem;
             color: #f472b6;
-            transition: all 0.3s;
-        }
-
-        .nav-link:hover {
-            background: #fdf2f8;
-            color: #be185d;
-        }
-
-        .nav-link:hover i {
-            color: #ec4899;
-            transform: scale(1.1);
         }
 
         .nav-link.active {
-            background: linear-gradient(135deg, #fbcfe8, #fce7f3);
+            background: linear-gradient(135deg, #fce7f3, #fdf2f8);
             color: #be185d;
-            font-weight: 500;
-            box-shadow: 0 5px 15px rgba(236, 72, 153, 0.2);
+            box-shadow: 0 4px 10px rgba(236, 72, 153, 0.1);
         }
 
         .nav-link.active i {
             color: #ec4899;
         }
 
-        /* ===== MAIN CONTENT ===== */
-        .main-content {
-            flex: 1;
-            overflow-y: auto;
-            height: 100vh;
-            padding: 20px;
-        }
-
-        .container {
-            max-width: 1200px;
-            margin: 0 auto;
-        }
-
-        /* ===== TOP BAR ===== */
-        .top-bar {
-            background: white;
+        .sidebar-version {
+            background: linear-gradient(135deg, #8b5cf6, #6366f1);
+            margin: 20px 16px;
+            padding: 16px;
             border-radius: 20px;
-            padding: 15px 25px;
-            margin-bottom: 25px;
-            box-shadow: 0 10px 30px rgba(244, 114, 182, 0.1);
+            color: white;
+        }
+
+        /* ===== MOBILE HEADER ===== */
+        .mobile-header {
+            background: white;
+            padding: 14px 18px;
             display: flex;
             justify-content: space-between;
             align-items: center;
-            border: 1px solid #fbcfe8;
+            border-bottom: 1px solid #fce7f3;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            background: rgba(255, 255, 255, 0.96);
+            backdrop-filter: blur(5px);
         }
 
-        .page-title {
+        .menu-toggle {
+            background: #fdf2f8;
+            border: none;
+            width: 44px;
+            height: 44px;
+            border-radius: 14px;
+            font-size: 22px;
+            color: #ec4899;
+            cursor: pointer;
+        }
+
+        .mobile-logo {
+            font-family: 'Playfair Display', serif;
+            font-weight: 700;
+            font-size: 1.2rem;
+            background: linear-gradient(135deg, #be185d, #a21caf);
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        /* ===== MAIN CONTENT ===== */
+        .main-content {
+            flex: 1;
+            padding: 16px 14px 90px;
+        }
+
+        .top-bar {
+            background: white;
+            border-radius: 24px;
+            padding: 14px 18px;
+            margin-bottom: 20px;
             display: flex;
+            flex-wrap: wrap;
+            justify-content: space-between;
             align-items: center;
-            gap: 15px;
+            gap: 12px;
+            border: 1px solid #fce7f3;
         }
 
         .page-title h1 {
             font-family: 'Playfair Display', serif;
-            font-size: 24px;
+            font-size: 1.35rem;
             color: #be185d;
-        }
-
-        .page-title i {
-            color: #ec4899;
-            font-size: 24px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
         }
 
         .save-all-btn {
             background: linear-gradient(135deg, #10b981, #059669);
             color: white;
             border: none;
-            padding: 12px 25px;
-            border-radius: 30px;
+            padding: 10px 20px;
+            border-radius: 40px;
             font-weight: 600;
-            font-size: 14px;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            transition: all 0.3s;
-        }
-
-        .save-all-btn:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 10px 25px rgba(16, 185, 129, 0.4);
-        }
-
-        /* ===== SETTINGS TABS ===== */
-        .settings-tabs {
-            display: flex;
-            gap: 10px;
-            margin-bottom: 25px;
-            flex-wrap: wrap;
-        }
-
-        .settings-tab {
-            padding: 12px 25px;
-            border: 1px solid #fbcfe8;
-            background: white;
-            border-radius: 30px;
-            font-weight: 600;
-            font-size: 14px;
-            color: #64748b;
-            cursor: pointer;
-            transition: all 0.3s;
-            display: flex;
+            font-size: 0.75rem;
+            display: inline-flex;
             align-items: center;
             gap: 8px;
+            cursor: pointer;
         }
 
-        .settings-tab:hover {
-            background: #fdf2f8;
-            color: #be185d;
-            border-color: #ec4899;
+        /* SETTINGS TABS (horizontal scroll on mobile) */
+        .settings-tabs {
+            display: flex;
+            overflow-x: auto;
+            gap: 8px;
+            margin-bottom: 20px;
+            padding-bottom: 4px;
+            scrollbar-width: thin;
         }
-
+        .settings-tab {
+            background: white;
+            border: 1px solid #fbcfe8;
+            padding: 10px 18px;
+            border-radius: 40px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            color: #64748b;
+            cursor: pointer;
+            white-space: nowrap;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+        }
         .settings-tab.active {
             background: #ec4899;
             color: white;
             border-color: #ec4899;
         }
 
-        /* ===== SETTINGS PANELS ===== */
+        /* PANELS */
         .settings-panel {
             display: none;
             background: white;
-            border-radius: 30px;
-            padding: 30px;
+            border-radius: 28px;
+            padding: 20px;
             border: 1px solid #fbcfe8;
-            box-shadow: 0 10px 30px rgba(244, 114, 182, 0.1);
-            margin-bottom: 25px;
+            margin-bottom: 20px;
         }
-
-        .settings-panel.active {
-            display: block;
-        }
+        .settings-panel.active { display: block; }
 
         .panel-header {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            margin-bottom: 25px;
-            padding-bottom: 15px;
+            flex-wrap: wrap;
+            margin-bottom: 20px;
+            padding-bottom: 12px;
             border-bottom: 2px solid #fce7f3;
         }
+        .panel-header h2 { font-size: 1.2rem; color: #be185d; display: flex; align-items: center; gap: 8px; }
 
-        .panel-header h2 {
-            font-family: 'Playfair Display', serif;
-            font-size: 20px;
-            color: #be185d;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-
-        /* ===== FORMS ===== */
         .form-grid {
             display: grid;
-            grid-template-columns: repeat(2, 1fr);
-            gap: 25px;
+            grid-template-columns: 1fr;
+            gap: 16px;
         }
-
-        .form-group {
-            margin-bottom: 20px;
-        }
-
-        .form-group.full-width {
-            grid-column: span 2;
-        }
-
-        .form-label {
-            display: block;
-            font-size: 12px;
-            font-weight: 600;
-            color: #64748b;
-            margin-bottom: 8px;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-        }
-
-        .form-control {
+        .form-group { margin-bottom: 4px; }
+        .form-label { font-size: 0.7rem; font-weight: 600; color: #64748b; display: block; margin-bottom: 5px; text-transform: uppercase; }
+        .form-control, .form-group select, .form-group textarea {
             width: 100%;
-            padding: 12px 15px;
+            padding: 12px;
             border: 2px solid #fce7f3;
-            border-radius: 15px;
-            font-size: 14px;
-            transition: all 0.3s;
+            border-radius: 16px;
+            font-size: 0.85rem;
             font-family: 'Poppins', sans-serif;
         }
+        .input-group { display: flex; gap: 8px; align-items: center; }
+        .input-group-text { background: #fdf2f8; padding: 12px 16px; border-radius: 16px; border: 2px solid #fce7f3; }
 
-        .form-control:focus {
-            outline: none;
-            border-color: #ec4899;
-            box-shadow: 0 0 0 4px #fbcfe8;
-        }
-
-        .form-control[readonly] {
-            background: #f8fafc;
-            cursor: not-allowed;
-        }
-
-        .input-group {
+        .action-buttons {
             display: flex;
-            align-items: center;
-            gap: 10px;
+            gap: 12px;
+            margin-top: 20px;
+            justify-content: flex-end;
+            flex-wrap: wrap;
         }
+        .btn-primary { background: linear-gradient(135deg, #ec4899, #d946ef); color: white; border: none; padding: 10px 24px; border-radius: 40px; font-weight: 600; cursor: pointer; display: inline-flex; align-items: center; gap: 6px; }
+        .btn-secondary { background: #f1f5f9; color: #64748b; border: none; padding: 10px 24px; border-radius: 40px; font-weight: 600; cursor: pointer; }
+        .btn-danger { background: #ef4444; color: white; border: none; padding: 10px 24px; border-radius: 40px; font-weight: 600; cursor: pointer; }
 
-        .input-group .form-control {
-            flex: 1;
-        }
-
-        .input-group-text {
-            padding: 12px 20px;
-            background: #fdf2f8;
-            border: 2px solid #fce7f3;
-            border-radius: 15px;
-            color: #be185d;
-            font-weight: 600;
-        }
-
-        /* ===== TOGGLE SWITCH ===== */
-        .toggle-switch {
-            position: relative;
-            display: inline-block;
-            width: 60px;
-            height: 34px;
-        }
-
-        .toggle-switch input {
-            opacity: 0;
-            width: 0;
-            height: 0;
-        }
-
-        .toggle-slider {
-            position: absolute;
-            cursor: pointer;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background-color: #cbd5e1;
-            transition: .4s;
-            border-radius: 34px;
-        }
-
-        .toggle-slider:before {
-            position: absolute;
-            content: "";
-            height: 26px;
-            width: 26px;
-            left: 4px;
-            bottom: 4px;
-            background-color: white;
-            transition: .4s;
-            border-radius: 50%;
-        }
-
-        input:checked + .toggle-slider {
-            background-color: #ec4899;
-        }
-
-        input:checked + .toggle-slider:before {
-            transform: translateX(26px);
-        }
-
-        .toggle-label {
-            margin-left: 10px;
-            font-size: 14px;
-            color: #1e293b;
-        }
-
-        /* ===== USER CARDS ===== */
+        /* USER CARDS */
         .users-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-            gap: 20px;
-            margin-top: 20px;
+            grid-template-columns: 1fr;
+            gap: 14px;
+            margin-top: 16px;
         }
-
         .user-card {
             background: #fdf2f8;
             border-radius: 20px;
-            padding: 20px;
+            padding: 14px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
             border: 1px solid #fbcfe8;
-            display: flex;
-            align-items: center;
-            gap: 15px;
-            transition: all 0.3s;
         }
-
-        .user-card:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 10px 20px rgba(236, 72, 153, 0.15);
-            border-color: #ec4899;
-        }
-
         .user-avatar {
-            width: 60px;
-            height: 60px;
+            width: 48px;
+            height: 48px;
             background: linear-gradient(135deg, #ec4899, #d946ef);
-            border-radius: 50%;
+            border-radius: 30px;
             display: flex;
             align-items: center;
             justify-content: center;
             color: white;
-            font-size: 24px;
             font-weight: 600;
+            font-size: 1.1rem;
         }
+        .user-info { flex: 1; }
+        .user-name { font-weight: 600; font-size: 0.9rem; }
+        .user-role { font-size: 0.7rem; color: #64748b; }
+        .user-status { font-size: 0.65rem; padding: 2px 8px; border-radius: 30px; display: inline-block; }
+        .status-active { background: #10b981; color: white; }
+        .status-inactive { background: #94a3b8; color: white; }
+        .user-actions { display: flex; gap: 6px; }
+        .user-action-btn { width: 34px; height: 34px; border-radius: 12px; border: none; cursor: pointer; background: white; }
+        .user-edit { color: #ec4899; }
+        .user-delete { color: #ef4444; }
 
-        .user-info {
-            flex: 1;
-        }
-
-        .user-name {
-            font-size: 16px;
-            font-weight: 600;
-            margin-bottom: 3px;
-        }
-
-        .user-role {
-            font-size: 12px;
-            color: #64748b;
-            margin-bottom: 5px;
-        }
-
-        .user-status {
-            display: inline-block;
-            padding: 3px 10px;
-            border-radius: 20px;
-            font-size: 10px;
-            font-weight: 600;
-        }
-
-        .status-active {
-            background: #10b981;
-            color: white;
-        }
-
-        .status-inactive {
-            background: #94a3b8;
-            color: white;
-        }
-
-        .user-actions {
-            display: flex;
-            gap: 8px;
-        }
-
-        .user-action-btn {
-            width: 35px;
-            height: 35px;
-            border: none;
-            border-radius: 10px;
-            cursor: pointer;
-            transition: all 0.3s;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-
-        .user-edit {
-            background: #fbcfe8;
-            color: #ec4899;
-        }
-
-        .user-edit:hover {
-            background: #ec4899;
-            color: white;
-        }
-
-        .user-delete {
-            background: #fee2e2;
-            color: #ef4444;
-        }
-
-        .user-delete:hover {
-            background: #ef4444;
-            color: white;
-        }
-
-        /* ===== BACKUP LIST ===== */
-        .backup-list {
-            margin-top: 20px;
-        }
-
+        /* BACKUP ITEMS */
         .backup-item {
             display: flex;
+            flex-wrap: wrap;
             justify-content: space-between;
             align-items: center;
-            padding: 15px;
+            padding: 12px;
             background: #fdf2f8;
-            border-radius: 15px;
+            border-radius: 16px;
             margin-bottom: 10px;
-            border: 1px solid #fbcfe8;
+            gap: 10px;
         }
 
-        .backup-info {
-            display: flex;
-            align-items: center;
-            gap: 15px;
-        }
-
-        .backup-icon {
-            width: 40px;
-            height: 40px;
-            background: white;
-            border-radius: 10px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: #ec4899;
-            font-size: 18px;
-        }
-
-        .backup-details h4 {
-            font-size: 14px;
-            font-weight: 600;
-            margin-bottom: 3px;
-        }
-
-        .backup-details p {
-            font-size: 11px;
-            color: #64748b;
-        }
-
-        .backup-size {
-            font-size: 12px;
-            font-weight: 600;
-            color: #be185d;
-        }
-
-        /* ===== ACTION BUTTONS ===== */
-        .action-buttons {
-            display: flex;
-            gap: 15px;
-            margin-top: 25px;
-            justify-content: flex-end;
-        }
-
-        .btn-primary {
-            background: linear-gradient(135deg, #ec4899, #d946ef);
-            color: white;
-            border: none;
-            padding: 12px 30px;
-            border-radius: 30px;
-            font-weight: 600;
-            font-size: 14px;
-            cursor: pointer;
-            transition: all 0.3s;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-        }
-
-        .btn-primary:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 10px 25px rgba(236, 72, 153, 0.4);
-        }
-
-        .btn-secondary {
-            background: #f1f5f9;
-            color: #64748b;
-            border: none;
-            padding: 12px 30px;
-            border-radius: 30px;
-            font-weight: 600;
-            font-size: 14px;
-            cursor: pointer;
-            transition: all 0.3s;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-        }
-
-        .btn-secondary:hover {
-            background: #e2e8f0;
-        }
-
-        .btn-danger {
-            background: #ef4444;
-            color: white;
-            border: none;
-            padding: 12px 30px;
-            border-radius: 30px;
-            font-weight: 600;
-            font-size: 14px;
-            cursor: pointer;
-            transition: all 0.3s;
-        }
-
-        .btn-danger:hover {
-            background: #dc2626;
-        }
-
-        /* ===== NOTIFICATION ===== */
         .notification {
             position: fixed;
-            top: 20px;
-            right: 20px;
-            padding: 15px 25px;
+            bottom: 20px;
+            left: 16px;
+            right: 16px;
             background: white;
-            border-radius: 15px;
-            box-shadow: 0 10px 40px rgba(0,0,0,0.1);
+            border-radius: 50px;
+            padding: 12px 20px;
+            z-index: 1300;
             display: flex;
             align-items: center;
-            gap: 10px;
-            z-index: 1000;
-            animation: slideIn 0.3s ease;
-            border-left: 4px solid #ec4899;
+            gap: 12px;
+            border-left: 5px solid #ec4899;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+            animation: slideUp 0.2s ease;
+        }
+        @keyframes slideUp {
+            from { opacity: 0; transform: translateY(20px);}
+            to { opacity: 1; transform: translateY(0);}
         }
 
-        @keyframes slideIn {
-            from { transform: translateX(100%); opacity: 0; }
-            to { transform: translateX(0); opacity: 1; }
+        @media (min-width: 768px) {
+            .form-grid { grid-template-columns: repeat(2, 1fr); }
+            .users-grid { grid-template-columns: repeat(auto-fill, minmax(280px,1fr)); }
         }
-
-        /* ===== RESPONSIVE ===== */
-        @media (max-width: 1024px) {
-            .form-grid {
-                grid-template-columns: 1fr;
-            }
-            
-            .form-group.full-width {
-                grid-column: span 1;
-            }
-        }
-
-        @media (max-width: 768px) {
-            body {
-                flex-direction: column;
-            }
-            
-            .sidebar {
-                width: 100%;
-                height: auto;
-                position: relative;
-            }
-            
-            .top-bar {
-                flex-direction: column;
-                gap: 15px;
-            }
-            
-            .settings-tabs {
-                justify-content: center;
-            }
-            
-            .action-buttons {
-                flex-direction: column;
-            }
-            
-            .users-grid {
-                grid-template-columns: 1fr;
-            }
+        @media (min-width: 1024px) {
+            .mobile-header { display: none; }
+            .sidebar { position: sticky; left: 0; width: 260px; height: 100vh; display: flex; }
+            .app-wrapper { flex-direction: row; }
+            .menu-overlay { display: none !important; }
         }
     </style>
 </head>
 <body>
+<div class="app-wrapper">
     <!-- SIDEBAR -->
-    <aside class="sidebar">
+    <aside class="sidebar" id="sidebar">
         <div class="sidebar-header">
-            <div class="logo">
-                <div class="logo-icon">
-                    <i class="fas fa-crown"></i>
-                </div>
-                <div class="logo-text">
-                    <h2>Boutique POS</h2>
-                    <span>by SAFTECH</span>
-                </div>
-            </div>
+            <div class="logo"><div class="logo-icon"><i class="fas fa-crown"></i></div><div class="logo-text"><h2>Boutique POS</h2><span>by SAFTECH</span></div></div>
         </div>
-
-        <!-- MAIN NAVIGATION -->
         <div class="nav-section">MAIN</div>
         <ul class="nav-menu">
             <li><a href="dashboard.html" class="nav-link"><i class="fas fa-chart-pie"></i> Dashboard</a></li>
             <li><a href="index.html" class="nav-link"><i class="fas fa-cash-register"></i> Point of Sale</a></li>
             <li><a href="inventory.html" class="nav-link"><i class="fas fa-tshirt"></i> Inventory</a></li>
             <li><a href="customers.html" class="nav-link"><i class="fas fa-users"></i> Customers</a></li>
-        </ul>
-
-        <div class="nav-section">MANAGEMENT</div>
-        <ul class="nav-menu">
             <li><a href="suppliers.html" class="nav-link"><i class="fas fa-truck"></i> Suppliers</a></li>
-            <li><a href="orders.html" class="nav-link"><i class="fas fa-clipboard-list"></i> Special Orders</a></li>
+            <li><a href="orders.html" class="nav-link"><i class="fas fa-clipboard-list"></i> Orders</a></li>
             <li><a href="returns.html" class="nav-link"><i class="fas fa-undo-alt"></i> Returns</a></li>
             <li><a href="sales-history.html" class="nav-link"><i class="fas fa-history"></i> Sales History</a></li>
-        </ul>
-
-        <div class="nav-section">MONITORING</div>
-        <ul class="nav-menu">
             <li><a href="low-stock.html" class="nav-link"><i class="fas fa-exclamation-triangle"></i> Low Stock</a></li>
             <li><a href="reports.html" class="nav-link"><i class="fas fa-chart-bar"></i> Reports</a></li>
             <li><a href="settings.html" class="nav-link active"><i class="fas fa-cog"></i> Settings</a></li>
         </ul>
-
-        <div style="padding: 20px; margin-top: 20px;">
-            <div style="background: linear-gradient(135deg, #8b5cf6, #6366f1); padding: 15px; border-radius: 15px;">
-                <p style="color: white; font-size: 12px; font-weight: 600; margin-bottom: 5px;">SYSTEM VERSION</p>
-                <p style="color: white; font-size: 20px; font-weight: 700;">v2.1.0</p>
-                <p style="color: rgba(255,255,255,0.8); font-size: 11px;">Last updated: Jan 2024</p>
-            </div>
+        <div class="sidebar-version">
+            <p style="font-size:12px; font-weight:600;">⚙️ SYSTEM VERSION</p>
+            <p style="font-size:22px; font-weight:700;">v2.1.0</p>
+            <p style="font-size:10px; opacity:0.9;">Last updated: Jan 2024</p>
         </div>
     </aside>
 
-    <!-- MAIN CONTENT -->
-    <main class="main-content">
-        <div class="container">
-            <!-- TOP BAR -->
-            <div class="top-bar">
-                <div class="page-title">
-                    <i class="fas fa-cog"></i>
-                    <h1>System Settings</h1>
-                </div>
-                <button class="save-all-btn" onclick="saveAllSettings()">
-                    <i class="fas fa-save"></i> Save All Changes
-                </button>
-            </div>
+    <div class="menu-overlay" id="overlay"></div>
 
-            <!-- SETTINGS TABS -->
-            <div class="settings-tabs">
-                <button class="settings-tab active" onclick="switchTab('store')">
-                    <i class="fas fa-store"></i> Store Information
-                </button>
-                <button class="settings-tab" onclick="switchTab('tax')">
-                    <i class="fas fa-percent"></i> Tax & Currency
-                </button>
-                <button class="settings-tab" onclick="switchTab('receipt')">
-                    <i class="fas fa-receipt"></i> Receipt Settings
-                </button>
-                <button class="settings-tab" onclick="switchTab('users')">
-                    <i class="fas fa-users-cog"></i> User Management
-                </button>
-                <button class="settings-tab" onclick="switchTab('backup')">
-                    <i class="fas fa-database"></i> Backup & Restore
-                </button>
-                <button class="settings-tab" onclick="switchTab('system')">
-                    <i class="fas fa-shield-alt"></i> System
-                </button>
-            </div>
-
-            <!-- STORE INFORMATION PANEL -->
-            <div id="store-panel" class="settings-panel active">
-                <div class="panel-header">
-                    <h2><i class="fas fa-store"></i> Store Information</h2>
-                </div>
-
-                <div class="form-grid">
-                    <div class="form-group">
-                        <label class="form-label">Store Name</label>
-                        <input type="text" class="form-control" id="storeName" value="SAFTECH BOUTIQUE">
-                    </div>
-                    <div class="form-group">
-                        <label class="form-label">Store Email</label>
-                        <input type="email" class="form-control" id="storeEmail" value="info@saftechboutique.co.ke">
-                    </div>
-                    <div class="form-group">
-                        <label class="form-label">Phone Number</label>
-                        <input type="tel" class="form-control" id="storePhone" value="0794 963537">
-                    </div>
-                    <div class="form-group">
-                        <label class="form-label">Alternative Phone</label>
-                        <input type="tel" class="form-control" id="storePhone2" value="0707 441702">
-                    </div>
-                    <div class="form-group full-width">
-                        <label class="form-label">Store Address</label>
-                        <input type="text" class="form-control" id="storeAddress" value="Westgate Mall, Nairobi, Kenya">
-                    </div>
-                    <div class="form-group">
-                        <label class="form-label">City</label>
-                        <input type="text" class="form-control" id="storeCity" value="Nairobi">
-                    </div>
-                    <div class="form-group">
-                        <label class="form-label">Country</label>
-                        <input type="text" class="form-control" id="storeCountry" value="Kenya">
-                    </div>
-                    <div class="form-group">
-                        <label class="form-label">PIN Number</label>
-                        <input type="text" class="form-control" id="storePin" value="P051234567X">
-                    </div>
-                    <div class="form-group">
-                        <label class="form-label">VAT Number</label>
-                        <input type="text" class="form-control" id="storeVat" value="VAT-12345678">
-                    </div>
-                </div>
-
-                <div class="action-buttons">
-                    <button class="btn-secondary" onclick="resetStoreInfo()">Reset</button>
-                    <button class="btn-primary" onclick="saveStoreInfo()">Save Changes</button>
-                </div>
-            </div>
-
-            <!-- TAX & CURRENCY PANEL -->
-            <div id="tax-panel" class="settings-panel">
-                <div class="panel-header">
-                    <h2><i class="fas fa-percent"></i> Tax & Currency Settings</h2>
-                </div>
-
-                <div class="form-grid">
-                    <div class="form-group">
-                        <label class="form-label">Currency</label>
-                        <select class="form-control" id="currency">
-                            <option value="KSH" selected>Kenyan Shilling (KSH)</option>
-                            <option value="USD">US Dollar (USD)</option>
-                            <option value="EUR">Euro (EUR)</option>
-                            <option value="GBP">British Pound (GBP)</option>
-                        </select>
-                    </div>
-                    <div class="form-group">
-                        <label class="form-label">Currency Symbol</label>
-                        <input type="text" class="form-control" id="currencySymbol" value="Ksh" readonly>
-                    </div>
-                    <div class="form-group">
-                        <label class="form-label">Tax Rate (%)</label>
-                        <div class="input-group">
-                            <input type="number" class="form-control" id="taxRate" value="16" min="0" max="100" step="0.1">
-                            <span class="input-group-text">%</span>
-                        </div>
-                    </div>
-                    <div class="form-group">
-                        <label class="form-label">Tax Name</label>
-                        <input type="text" class="form-control" id="taxName" value="VAT">
-                    </div>
-                    <div class="form-group full-width">
-                        <label class="form-label">Price Display</label>
-                        <div style="display: flex; gap: 20px; align-items: center; padding: 10px 0;">
-                            <label style="display: flex; align-items: center; gap: 8px;">
-                                <input type="radio" name="priceDisplay" value="incl" checked> Inclusive of Tax
-                            </label>
-                            <label style="display: flex; align-items: center; gap: 8px;">
-                                <input type="radio" name="priceDisplay" value="excl"> Exclusive of Tax
-                            </label>
-                        </div>
-                    </div>
-                    <div class="form-group full-width">
-                        <label class="form-label">Decimal Places</label>
-                        <select class="form-control" id="decimalPlaces" style="width: 100px;">
-                            <option value="0">0</option>
-                            <option value="1">1</option>
-                            <option value="2" selected>2</option>
-                        </select>
-                    </div>
-                </div>
-
-                <div class="action-buttons">
-                    <button class="btn-secondary" onclick="resetTaxSettings()">Reset</button>
-                    <button class="btn-primary" onclick="saveTaxSettings()">Save Changes</button>
-                </div>
-            </div>
-
-            <!-- RECEIPT SETTINGS PANEL -->
-            <div id="receipt-panel" class="settings-panel">
-                <div class="panel-header">
-                    <h2><i class="fas fa-receipt"></i> Receipt Settings</h2>
-                </div>
-
-                <div class="form-grid">
-                    <div class="form-group full-width">
-                        <label class="form-label">Receipt Header</label>
-                        <textarea class="form-control" id="receiptHeader" rows="3">SAFTECH BOUTIQUE
-Your Style Destination
-Tel: 0794 963537</textarea>
-                    </div>
-                    <div class="form-group full-width">
-                        <label class="form-label">Receipt Footer</label>
-                        <textarea class="form-control" id="receiptFooter" rows="3">Thank you for shopping with us!
-Returns accepted within 30 days
-Powered by SAFTECH RESOLUTIONS</textarea>
-                    </div>
-                    <div class="form-group full-width">
-                        <label class="form-label">Receipt Options</label>
-                        <div style="display: grid; gap: 15px; padding: 10px 0;">
-                            <label style="display: flex; align-items: center; gap: 10px;">
-                                <input type="checkbox" id="showLogo" checked> Show Store Logo
-                            </label>
-                            <label style="display: flex; align-items: center; gap: 10px;">
-                                <input type="checkbox" id="showTax" checked> Show Tax Breakdown
-                            </label>
-                            <label style="display: flex; align-items: center; gap: 10px;">
-                                <input type="checkbox" id="showCashier" checked> Show Cashier Name
-                            </label>
-                            <label style="display: flex; align-items: center; gap: 10px;">
-                                <input type="checkbox" id="autoPrint"> Auto-print after sale
-                            </label>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="action-buttons">
-                    <button class="btn-secondary" onclick="resetReceiptSettings()">Reset</button>
-                    <button class="btn-primary" onclick="saveReceiptSettings()">Save Changes</button>
-                </div>
-            </div>
-
-            <!-- USER MANAGEMENT PANEL -->
-            <div id="users-panel" class="settings-panel">
-                <div class="panel-header">
-                    <h2><i class="fas fa-users-cog"></i> User Management</h2>
-                    <button class="btn-primary" onclick="addUser()">
-                        <i class="fas fa-user-plus"></i> Add User
-                    </button>
-                </div>
-
-                <div class="users-grid">
-                    <div class="user-card">
-                        <div class="user-avatar">AS</div>
-                        <div class="user-info">
-                            <div class="user-name">Alex Safari</div>
-                            <div class="user-role">Administrator</div>
-                            <span class="user-status status-active">Active</span>
-                        </div>
-                        <div class="user-actions">
-                            <button class="user-action-btn user-edit" onclick="editUser(1)"><i class="fas fa-edit"></i></button>
-                            <button class="user-action-btn user-delete" onclick="deleteUser(1)"><i class="fas fa-trash"></i></button>
-                        </div>
-                    </div>
-
-                    <div class="user-card">
-                        <div class="user-avatar">SK</div>
-                        <div class="user-info">
-                            <div class="user-name">Sarah Kimani</div>
-                            <div class="user-role">Manager</div>
-                            <span class="user-status status-active">Active</span>
-                        </div>
-                        <div class="user-actions">
-                            <button class="user-action-btn user-edit" onclick="editUser(2)"><i class="fas fa-edit"></i></button>
-                            <button class="user-action-btn user-delete" onclick="deleteUser(2)"><i class="fas fa-trash"></i></button>
-                        </div>
-                    </div>
-
-                    <div class="user-card">
-                        <div class="user-avatar">JM</div>
-                        <div class="user-info">
-                            <div class="user-name">Jane Muthoni</div>
-                            <div class="user-role">Cashier</div>
-                            <span class="user-status status-active">Active</span>
-                        </div>
-                        <div class="user-actions">
-                            <button class="user-action-btn user-edit" onclick="editUser(3)"><i class="fas fa-edit"></i></button>
-                            <button class="user-action-btn user-delete" onclick="deleteUser(3)"><i class="fas fa-trash"></i></button>
-                        </div>
-                    </div>
-
-                    <div class="user-card">
-                        <div class="user-avatar">PM</div>
-                        <div class="user-info">
-                            <div class="user-name">Peter Mwangi</div>
-                            <div class="user-role">Cashier</div>
-                            <span class="user-status status-inactive">Inactive</span>
-                        </div>
-                        <div class="user-actions">
-                            <button class="user-action-btn user-edit" onclick="editUser(4)"><i class="fas fa-edit"></i></button>
-                            <button class="user-action-btn user-delete" onclick="deleteUser(4)"><i class="fas fa-trash"></i></button>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="action-buttons">
-                    <button class="btn-secondary" onclick="resetUserPermissions()">Reset Permissions</button>
-                    <button class="btn-primary" onclick="saveUserSettings()">Save Changes</button>
-                </div>
-            </div>
-
-            <!-- BACKUP & RESTORE PANEL -->
-            <div id="backup-panel" class="settings-panel">
-                <div class="panel-header">
-                    <h2><i class="fas fa-database"></i> Backup & Restore</h2>
-                </div>
-
-                <div style="margin-bottom: 30px;">
-                    <h3 style="font-size: 16px; color: #be185d; margin-bottom: 15px;">Create Backup</h3>
-                    <div style="display: flex; gap: 15px; flex-wrap: wrap;">
-                        <button class="btn-primary" onclick="createBackup()">
-                            <i class="fas fa-download"></i> Download Backup
-                        </button>
-                        <button class="btn-secondary" onclick="cloudBackup()">
-                            <i class="fas fa-cloud-upload-alt"></i> Cloud Backup
-                        </button>
-                    </div>
-                </div>
-
-                <div>
-                    <h3 style="font-size: 16px; color: #be185d; margin-bottom: 15px;">Recent Backups</h3>
-                    <div class="backup-list">
-                        <div class="backup-item">
-                            <div class="backup-info">
-                                <div class="backup-icon">
-                                    <i class="fas fa-database"></i>
-                                </div>
-                                <div class="backup-details">
-                                    <h4>Full System Backup</h4>
-                                    <p>Jan 18, 2024 · 02:30 PM</p>
-                                </div>
-                            </div>
-                            <div class="backup-size">245 MB</div>
-                            <div>
-                                <button class="btn-secondary" style="padding: 5px 15px;" onclick="restoreBackup(1)">Restore</button>
-                            </div>
-                        </div>
-
-                        <div class="backup-item">
-                            <div class="backup-info">
-                                <div class="backup-icon">
-                                    <i class="fas fa-database"></i>
-                                </div>
-                                <div class="backup-details">
-                                    <h4>Weekly Auto-Backup</h4>
-                                    <p>Jan 15, 2024 · 11:00 PM</p>
-                                </div>
-                            </div>
-                            <div class="backup-size">238 MB</div>
-                            <div>
-                                <button class="btn-secondary" style="padding: 5px 15px;" onclick="restoreBackup(2)">Restore</button>
-                            </div>
-                        </div>
-
-                        <div class="backup-item">
-                            <div class="backup-info">
-                                <div class="backup-icon">
-                                    <i class="fas fa-database"></i>
-                                </div>
-                                <div class="backup-details">
-                                    <h4>Monthly Archive</h4>
-                                    <p>Jan 01, 2024 · 12:00 AM</p>
-                                </div>
-                            </div>
-                            <div class="backup-size">512 MB</div>
-                            <div>
-                                <button class="btn-secondary" style="padding: 5px 15px;" onclick="restoreBackup(3)">Restore</button>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="action-buttons">
-                    <button class="btn-danger" onclick="factoryReset()">
-                        <i class="fas fa-exclamation-triangle"></i> Factory Reset
-                    </button>
-                </div>
-            </div>
-
-            <!-- SYSTEM PANEL -->
-            <div id="system-panel" class="settings-panel">
-                <div class="panel-header">
-                    <h2><i class="fas fa-shield-alt"></i> System Settings</h2>
-                </div>
-
-                <div class="form-grid">
-                    <div class="form-group full-width">
-                        <label class="form-label">System Preferences</label>
-                        <div style="display: grid; gap: 15px; padding: 10px 0;">
-                            <label style="display: flex; align-items: center; gap: 10px;">
-                                <input type="checkbox" id="autoSave" checked> Auto-save transactions
-                            </label>
-                            <label style="display: flex; align-items: center; gap: 10px;">
-                                <input type="checkbox" id="offlineMode"> Offline mode enabled
-                            </label>
-                            <label style="display: flex; align-items: center; gap: 10px;">
-                                <input type="checkbox" id="darkMode"> Dark mode
-                            </label>
-                            <label style="display: flex; align-items: center; gap: 10px;">
-                                <input type="checkbox" id="notifications" checked> Enable notifications
-                            </label>
-                        </div>
-                    </div>
-
-                    <div class="form-group">
-                        <label class="form-label">Session Timeout (minutes)</label>
-                        <input type="number" class="form-control" id="sessionTimeout" value="30" min="5" max="120">
-                    </div>
-
-                    <div class="form-group">
-                        <label class="form-label">Items per page</label>
-                        <select class="form-control" id="itemsPerPage">
-                            <option value="10">10</option>
-                            <option value="25" selected>25</option>
-                            <option value="50">50</option>
-                            <option value="100">100</option>
-                        </select>
-                    </div>
-
-                    <div class="form-group full-width">
-                        <label class="form-label">Language</label>
-                        <select class="form-control" id="language">
-                            <option value="en" selected>English</option>
-                            <option value="sw">Swahili</option>
-                            <option value="fr">French</option>
-                        </select>
-                    </div>
-                </div>
-
-                <div class="action-buttons">
-                    <button class="btn-secondary" onclick="checkUpdates()">
-                        <i class="fas fa-sync-alt"></i> Check for Updates
-                    </button>
-                    <button class="btn-primary" onclick="saveSystemSettings()">Save Changes</button>
-                </div>
-            </div>
+    <div class="main-content">
+        <div class="mobile-header">
+            <button class="menu-toggle" id="menuToggleBtn"><i class="fas fa-bars"></i></button>
+            <div class="mobile-logo">Settings</div>
+            <i class="fas fa-cog" style="color:#ec4899;"></i>
         </div>
-    </main>
 
-    <script>
-        // Tab Switching
-        function switchTab(tabName) {
-            // Hide all panels
-            document.querySelectorAll('.settings-panel').forEach(panel => {
-                panel.classList.remove('active');
-            });
-            
-            // Remove active class from all tabs
-            document.querySelectorAll('.settings-tab').forEach(tab => {
-                tab.classList.remove('active');
-            });
-            
-            // Show selected panel
-            document.getElementById(`${tabName}-panel`).classList.add('active');
-            
-            // Add active class to clicked tab
-            event.target.classList.add('active');
-        }
+        <div class="top-bar">
+            <div class="page-title"><h1><i class="fas fa-cog"></i> Settings</h1></div>
+            <button class="save-all-btn" onclick="saveAllSettings()"><i class="fas fa-save"></i> Save All</button>
+        </div>
 
-        // Store Information Functions
-        function saveStoreInfo() {
-            showNotification('Store information saved successfully!', 'success');
-        }
+        <div class="settings-tabs">
+            <button class="settings-tab active" data-tab="store"><i class="fas fa-store"></i> Store</button>
+            <button class="settings-tab" data-tab="tax"><i class="fas fa-percent"></i> Tax</button>
+            <button class="settings-tab" data-tab="receipt"><i class="fas fa-receipt"></i> Receipt</button>
+            <button class="settings-tab" data-tab="users"><i class="fas fa-users-cog"></i> Users</button>
+            <button class="settings-tab" data-tab="backup"><i class="fas fa-database"></i> Backup</button>
+            <button class="settings-tab" data-tab="system"><i class="fas fa-shield-alt"></i> System</button>
+        </div>
 
-        function resetStoreInfo() {
-            if (confirm('Reset store information to default?')) {
-                document.getElementById('storeName').value = 'SAFTECH BOUTIQUE';
-                document.getElementById('storeEmail').value = 'info@saftechboutique.co.ke';
-                document.getElementById('storePhone').value = '0794 963537';
-                document.getElementById('storePhone2').value = '0707 441702';
-                document.getElementById('storeAddress').value = 'Westgate Mall, Nairobi, Kenya';
-                document.getElementById('storeCity').value = 'Nairobi';
-                document.getElementById('storeCountry').value = 'Kenya';
-                document.getElementById('storePin').value = 'P051234567X';
-                document.getElementById('storeVat').value = 'VAT-12345678';
-                showNotification('Store information reset', 'info');
-            }
-        }
+        <!-- STORE PANEL -->
+        <div id="store-panel" class="settings-panel active">
+            <div class="panel-header"><h2><i class="fas fa-store"></i> Store Info</h2></div>
+            <div class="form-grid">
+                <div class="form-group"><label class="form-label">Store Name</label><input type="text" class="form-control" id="storeName" value="SAFTECH BOUTIQUE"></div>
+                <div class="form-group"><label class="form-label">Email</label><input type="email" class="form-control" id="storeEmail" value="info@saftechboutique.co.ke"></div>
+                <div class="form-group"><label class="form-label">Phone</label><input type="tel" class="form-control" id="storePhone" value="0794 963537"></div>
+                <div class="form-group"><label class="form-label">Alt Phone</label><input type="tel" class="form-control" id="storePhone2" value="0707 441702"></div>
+                <div class="form-group full-width"><label class="form-label">Address</label><input type="text" class="form-control" id="storeAddress" value="Westgate Mall, Nairobi"></div>
+                <div class="form-group"><label class="form-label">City</label><input type="text" class="form-control" id="storeCity" value="Nairobi"></div>
+                <div class="form-group"><label class="form-label">PIN</label><input type="text" class="form-control" id="storePin" value="P051234567X"></div>
+                <div class="form-group"><label class="form-label">VAT No.</label><input type="text" class="form-control" id="storeVat" value="VAT-12345678"></div>
+            </div>
+            <div class="action-buttons"><button class="btn-secondary" onclick="resetStore()">Reset</button><button class="btn-primary" onclick="saveStore()">Save</button></div>
+        </div>
 
-        // Tax Settings Functions
-        function saveTaxSettings() {
-            showNotification('Tax settings saved successfully!', 'success');
-        }
+        <!-- TAX PANEL -->
+        <div id="tax-panel" class="settings-panel">
+            <div class="panel-header"><h2><i class="fas fa-percent"></i> Tax & Currency</h2></div>
+            <div class="form-grid">
+                <div class="form-group"><label class="form-label">Currency</label><select class="form-control" id="currency"><option value="KSH" selected>KSH</option><option value="USD">USD</option></select></div>
+                <div class="form-group"><label class="form-label">Symbol</label><input type="text" class="form-control" id="currencySymbol" value="Ksh" readonly></div>
+                <div class="form-group"><label class="form-label">Tax Rate (%)</label><div class="input-group"><input type="number" class="form-control" id="taxRate" value="16"><span class="input-group-text">%</span></div></div>
+                <div class="form-group"><label class="form-label">Tax Name</label><input type="text" class="form-control" id="taxName" value="VAT"></div>
+            </div>
+            <div class="action-buttons"><button class="btn-secondary" onclick="resetTax()">Reset</button><button class="btn-primary" onclick="saveTax()">Save</button></div>
+        </div>
 
-        function resetTaxSettings() {
-            if (confirm('Reset tax settings to default?')) {
-                document.getElementById('taxRate').value = '16';
-                document.getElementById('taxName').value = 'VAT';
-                document.querySelector('input[name="priceDisplay"][value="incl"]').checked = true;
-                document.getElementById('decimalPlaces').value = '2';
-                showNotification('Tax settings reset', 'info');
-            }
-        }
+        <!-- RECEIPT PANEL -->
+        <div id="receipt-panel" class="settings-panel">
+            <div class="panel-header"><h2><i class="fas fa-receipt"></i> Receipt</h2></div>
+            <div class="form-grid">
+                <div class="form-group full-width"><label class="form-label">Header</label><textarea class="form-control" id="receiptHeader" rows="3">SAFTECH BOUTIQUE\nYour Style Destination\nTel: 0794 963537</textarea></div>
+                <div class="form-group full-width"><label class="form-label">Footer</label><textarea class="form-control" id="receiptFooter" rows="3">Thank you!\nReturns 30 days</textarea></div>
+                <div class="form-group full-width"><label><input type="checkbox" id="showTax" checked> Show Tax</label> <label><input type="checkbox" id="showCashier" checked> Show Cashier</label></div>
+            </div>
+            <div class="action-buttons"><button class="btn-secondary" onclick="resetReceipt()">Reset</button><button class="btn-primary" onclick="saveReceipt()">Save</button></div>
+        </div>
 
-        // Receipt Settings Functions
-        function saveReceiptSettings() {
-            showNotification('Receipt settings saved successfully!', 'success');
-        }
+        <!-- USERS PANEL -->
+        <div id="users-panel" class="settings-panel">
+            <div class="panel-header"><h2><i class="fas fa-users-cog"></i> Users</h2><button class="btn-primary" onclick="addUser()"><i class="fas fa-plus"></i> Add</button></div>
+            <div class="users-grid" id="usersGrid"></div>
+            <div class="action-buttons"><button class="btn-secondary" onclick="resetUsers()">Reset Permissions</button><button class="btn-primary" onclick="saveUsers()">Save</button></div>
+        </div>
 
-        function resetReceiptSettings() {
-            if (confirm('Reset receipt settings to default?')) {
-                document.getElementById('receiptHeader').value = 'SAFTECH BOUTIQUE\nYour Style Destination\nTel: 0794 963537';
-                document.getElementById('receiptFooter').value = 'Thank you for shopping with us!\nReturns accepted within 30 days\nPowered by SAFTECH RESOLUTIONS';
-                document.getElementById('showLogo').checked = true;
-                document.getElementById('showTax').checked = true;
-                document.getElementById('showCashier').checked = true;
-                document.getElementById('autoPrint').checked = false;
-                showNotification('Receipt settings reset', 'info');
-            }
-        }
+        <!-- BACKUP PANEL -->
+        <div id="backup-panel" class="settings-panel">
+            <div class="panel-header"><h2><i class="fas fa-database"></i> Backup</h2></div>
+            <div style="margin-bottom:20px;"><button class="btn-primary" onclick="createBackup()"><i class="fas fa-download"></i> Download Backup</button> <button class="btn-secondary" onclick="cloudBackup()"><i class="fas fa-cloud-upload-alt"></i> Cloud</button></div>
+            <div id="backupList"></div>
+            <div class="action-buttons"><button class="btn-danger" onclick="factoryReset()">Factory Reset</button></div>
+        </div>
 
-        // User Management Functions
-        function addUser() {
-            showNotification('Add user feature coming soon!', 'info');
-        }
+        <!-- SYSTEM PANEL -->
+        <div id="system-panel" class="settings-panel">
+            <div class="panel-header"><h2><i class="fas fa-shield-alt"></i> System</h2></div>
+            <div class="form-grid">
+                <div class="form-group full-width"><label><input type="checkbox" id="autoSave" checked> Auto-save</label> <label><input type="checkbox" id="notifications" checked> Notifications</label></div>
+                <div class="form-group"><label class="form-label">Timeout (min)</label><input type="number" class="form-control" id="sessionTimeout" value="30"></div>
+                <div class="form-group"><label class="form-label">Items/Page</label><select class="form-control" id="itemsPerPage"><option value="25" selected>25</option><option value="50">50</option></select></div>
+            </div>
+            <div class="action-buttons"><button class="btn-secondary" onclick="checkUpdates()">Check Updates</button><button class="btn-primary" onclick="saveSystem()">Save</button></div>
+        </div>
+    </div>
+</div>
 
-        function editUser(userId) {
-            showNotification(`Edit user ${userId}`, 'info');
-        }
+<script>
+    // Sample users
+    let users = [
+        { id:1, name:'Alex Safari', role:'Administrator', status:'active', avatar:'AS' },
+        { id:2, name:'Sarah Kimani', role:'Manager', status:'active', avatar:'SK' },
+        { id:3, name:'Jane Muthoni', role:'Cashier', status:'active', avatar:'JM' },
+        { id:4, name:'Peter Mwangi', role:'Cashier', status:'inactive', avatar:'PM' }
+    ];
+    const backups = [
+        { name:'Full Backup', date:'Jan 18, 2024 · 02:30 PM', size:'245 MB', id:1 },
+        { name:'Weekly Auto', date:'Jan 15, 2024 · 11:00 PM', size:'238 MB', id:2 },
+        { name:'Monthly Archive', date:'Jan 01, 2024 · 12:00 AM', size:'512 MB', id:3 }
+    ];
 
-        function deleteUser(userId) {
-            if (confirm('Are you sure you want to delete this user?')) {
-                showNotification(`User ${userId} deleted`, 'success');
-            }
-        }
+    function renderUsers() {
+        const container = document.getElementById('usersGrid');
+        container.innerHTML = users.map(u => `
+            <div class="user-card"><div class="user-avatar">${u.avatar}</div><div class="user-info"><div class="user-name">${u.name}</div><div class="user-role">${u.role}</div><span class="user-status ${u.status==='active'?'status-active':'status-inactive'}">${u.status}</span></div><div class="user-actions"><button class="user-action-btn user-edit" onclick="editUser(${u.id})"><i class="fas fa-edit"></i></button><button class="user-action-btn user-delete" onclick="deleteUser(${u.id})"><i class="fas fa-trash"></i></button></div></div>
+        `).join('');
+    }
+    function renderBackups() {
+        const container = document.getElementById('backupList');
+        container.innerHTML = backups.map(b => `
+            <div class="backup-item"><div><strong>${b.name}</strong><br><small>${b.date}</small></div><div>${b.size}</div><button class="btn-secondary" style="padding:5px 12px;" onclick="restoreBackup(${b.id})">Restore</button></div>
+        `).join('');
+    }
 
-        function saveUserSettings() {
-            showNotification('User settings saved successfully!', 'success');
-        }
-
-        function resetUserPermissions() {
-            if (confirm('Reset all user permissions to default?')) {
-                showNotification('User permissions reset', 'info');
-            }
-        }
-
-        // Backup Functions
-        function createBackup() {
-            showNotification('Creating backup...', 'info');
-            setTimeout(() => {
-                showNotification('Backup created successfully!', 'success');
-            }, 2000);
-        }
-
-        function cloudBackup() {
-            showNotification('Uploading to cloud...', 'info');
-            setTimeout(() => {
-                showNotification('Cloud backup complete!', 'success');
-            }, 2000);
-        }
-
-        function restoreBackup(backupId) {
-            if (confirm('Restore this backup? Current data will be overwritten.')) {
-                showNotification(`Restoring backup ${backupId}...`, 'info');
-                setTimeout(() => {
-                    showNotification('Restore complete!', 'success');
-                }, 2000);
-            }
-        }
-
-        function factoryReset() {
-            if (confirm('⚠️ WARNING: This will erase ALL data. Are you absolutely sure?')) {
-                if (confirm('Type "RESET" to confirm factory reset:')) {
-                    showNotification('Factory reset initiated', 'warning');
-                }
-            }
-        }
-
-        // System Settings Functions
-        function saveSystemSettings() {
-            showNotification('System settings saved successfully!', 'success');
-        }
-
-        function checkUpdates() {
-            showNotification('Checking for updates...', 'info');
-            setTimeout(() => {
-                showNotification('System is up to date!', 'success');
-            }, 2000);
-        }
-
-        // Save All Settings
-        function saveAllSettings() {
-            showNotification('All settings saved successfully!', 'success');
-        }
-
-        // Show Notification
-        function showNotification(message, type = 'info') {
-            const notification = document.createElement('div');
-            notification.className = 'notification';
-            notification.innerHTML = `
-                <i class="fas ${type === 'success' ? 'fa-check-circle' : type === 'error' ? 'fa-exclamation-circle' : type === 'warning' ? 'fa-exclamation-triangle' : 'fa-info-circle'}" style="color: #ec4899;"></i>
-                <span>${message}</span>
-            `;
-            
-            document.body.appendChild(notification);
-            setTimeout(() => notification.remove(), 3000);
-        }
-
-        // Update currency symbol based on selection
-        document.getElementById('currency')?.addEventListener('change', function(e) {
-            const symbols = {
-                'KSH': 'Ksh',
-                'USD': '$',
-                'EUR': '€',
-                'GBP': '£'
-            };
-            document.getElementById('currencySymbol').value = symbols[e.target.value] || 'Ksh';
+    // Tab switching
+    document.querySelectorAll('.settings-tab').forEach(btn => {
+        btn.addEventListener('click', () => {
+            document.querySelectorAll('.settings-tab').forEach(b=>b.classList.remove('active'));
+            btn.classList.add('active');
+            const tab = btn.getAttribute('data-tab');
+            document.querySelectorAll('.settings-panel').forEach(p=>p.classList.remove('active'));
+            document.getElementById(`${tab}-panel`).classList.add('active');
         });
-    </script>
+    });
+
+    // Save functions with notifications
+    function saveAllSettings() { showNotif('All settings saved','success'); }
+    function saveStore() { showNotif('Store info saved','success'); }
+    function resetStore() { document.getElementById('storeName').value='SAFTECH BOUTIQUE'; showNotif('Store reset','info'); }
+    function saveTax() { showNotif('Tax settings saved','success'); }
+    function resetTax() { document.getElementById('taxRate').value='16'; showNotif('Tax reset','info'); }
+    function saveReceipt() { showNotif('Receipt settings saved','success'); }
+    function resetReceipt() { document.getElementById('receiptHeader').value='SAFTECH BOUTIQUE\nYour Style Destination\nTel: 0794 963537'; showNotif('Receipt reset','info'); }
+    function saveUsers() { showNotif('User settings saved','success'); }
+    function resetUsers() { showNotif('Permissions reset','info'); }
+    function saveSystem() { showNotif('System settings saved','success'); }
+    function addUser() { showNotif('Add user feature coming soon','info'); }
+    function editUser(id) { showNotif(`Edit user ${id}`,'info'); }
+    function deleteUser(id) { if(confirm('Delete user?')){ users=users.filter(u=>u.id!==id); renderUsers(); showNotif('User deleted','success'); } }
+    function createBackup() { showNotif('Backup created','success'); }
+    function cloudBackup() { showNotif('Cloud backup started','info'); }
+    function restoreBackup(id) { if(confirm('Restore backup?')) showNotif('Restore complete','success'); }
+    function factoryReset() { if(confirm('WARNING: Erase all data? Type RESET')) showNotif('Factory reset','warning'); }
+    function checkUpdates() { showNotif('System is up to date','success'); }
+
+    function showNotif(msg, type) {
+        const n = document.createElement('div');
+        n.className = 'notification';
+        n.innerHTML = `<i class="fas ${type==='success'?'fa-check-circle':'fa-info-circle'}" style="color:#ec4899"></i><span>${msg}</span>`;
+        document.body.appendChild(n);
+        setTimeout(()=>n.remove(), 2500);
+    }
+
+    // Sidebar toggle
+    document.getElementById('menuToggleBtn')?.addEventListener('click',()=>{ document.getElementById('sidebar').classList.add('open'); document.getElementById('overlay').classList.add('active'); });
+    document.getElementById('overlay')?.addEventListener('click',()=>{ document.getElementById('sidebar').classList.remove('open'); document.getElementById('overlay').classList.remove('active'); });
+
+    renderUsers();
+    renderBackups();
+</script>
 </body>
 </html>
